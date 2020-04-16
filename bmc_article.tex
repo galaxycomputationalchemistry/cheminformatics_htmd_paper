@@ -79,6 +79,7 @@
 
 %%% Put your definitions there:
 \startlocaldefs
+\usepackage{url}
 \endlocaldefs
 
 
@@ -282,32 +283,19 @@ binding affinity of various ligands for the Hsp90 protein..
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
+Molecular dynamics (MD) ... However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy, KNIME or CWL; both the former provide molecular dynamics tools/nodes.
 
-\textbf{\emph{TO ADD: why/aim (1st paragraph of the introduction)}}.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics using Galaxy. Galaxy
+\cite{afgan2018galaxy} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
+concept makes high-throughput sequencing data analysis a structured, reproducible and transparent process.
 
-This tutorial provides a detailed workflow for \textbf{\emph{TO ADD:
-outputs}} from \textbf{\emph{TO ADD: inputs}} using Galaxy. Galaxy
-\cite{afgan2018galaxy} is a data analysis platform that provides access
-to hundreds of tools used in a wide variety of analysis scenarios. It
-features a web-based user interface while automatically and
-transparently managing underlying computation details. The Galaxy's
-concept makes high-throughput sequencing data analysis a structured,
-reproducible and transparent process.
+The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS engine), to analysis of the results. 
 
-The tutorial starts from \textbf{\emph{TO ADD: inputs}}. It runs first a
-\textbf{\emph{TO ADD: overview of each step (1 sentence) of the workflow
-with tool names in bold and citation.}}
+The entire analysis described this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
+(\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://usegalaxy.za/}) (?).
 
-The entire analysis described this article can be conducted efficiently
-on any Galaxy server which has the needed tools. However, to be sure,
-the authors recommend to use the Galaxy Europe server
-(\url{https://usegalaxy.eu/}).
-
-The tutorial presented in this article has been developed by the Galaxy
-Training Network \cite{batut2018community} and its most up-to-date
-version is available online on the
-\href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/hthtml-analysis_local/tutorial.html}{Galaxy
-Training Materials} website.
+The tutorial presented in this article has been developed by the Galaxy Training Network \cite{batut2018community} and its most up-to-date
+version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
 
 \hypertarget{description-of-the-data}{%
 \section{Description of the data}\label{description-of-the-data}}
@@ -319,9 +307,8 @@ N-terminus of Hsp90 (heat shock protein 90).
 \hypertarget{background}{%
 \section{Background}\label{background}}
 
-\hypertarget{what-is-high-throughput-molecular-dynamics}{%
 \subsection{What is high-throughput molecular
-dynamics?}\label{what-is-high-throughput-molecular-dynamics}}
+dynamics?}\label{what-is-high-throughput-molecular-dynamics}
 
 Molecular dynamics (MD) is a method to simulate molecular motion by
 iterative application of Newton's laws of motion. It is often applied to
@@ -332,9 +319,8 @@ tutorial provides a guide to setting up and running a high-throughput
 workflow for screening multiple small molecules, using the open-source
 GROMACS tools provided through the Galaxy platform.
 
-\hypertarget{why-is-hsp90-interesting-to-study}{%
 \subsection{Why is Hsp90 interesting to
-study?}\label{why-is-hsp90-interesting-to-study}}
+study?}\label{why-is-hsp90-interesting-to-study}
 
 The 90 kDa heat shock protein (Hsp90) is a chaperone protein responsible
 for catalyzing the conversion of a wide variety of proteins to a
@@ -354,8 +340,7 @@ could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
 anti-tumor agents.
 
-\hypertarget{get-data}{%
-\subsection{Get data}\label{get-data}}
+\subsection{Get data}\label{get-data}
 
 First of all, download the required data.
 
@@ -365,24 +350,26 @@ First of all, download the required data.
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Create a new history for this tutorial \textgreater{} 3. Rename the
-  dataset to `Hsp90 structure' \textgreater{} 4. Check that the datatype
-  is correct (PDB file). \textgreater{} \textgreater{} \{: .hands\_on\}
+  Create a new history for this tutorial
+  
+\item
+  Rename the dataset to `Hsp90 structure'
+\item
+  Search Galaxy for the 'Get PDB' tool. Request the accession code \texttt{6hhr}.
+\item
+  Check that the datatype is correct (PDB file).
 \end{enumerate}
 
-\hypertarget{simulation}{%
-\section{Simulation}\label{simulation}}
+\section{Simulation}\label{simulation}
 
-\hypertarget{topology-generation}{%
-\subsection{Topology generation}\label{topology-generation}}
+\subsection{Topology generation}\label{topology-generation}
 
-Now we have downloaded a PDB structure of the protein we wish to study,
-we will start parameterizing it for MD simulation.
+Now we have downloaded a PDB structure of the protein we wish to study, we will start parameterizing it for MD simulation.
 
 GROMACS distinguishes between constant and dynamic attributes of the
-atoms in the system. The constant attributes (e.g.~atom charges, bonds
+atoms in the system. The constant attributes (e.g. atom charges, bonds
 connecting atoms) are listed in the topology (TOP file), while dynamic
-attributes (attributes that can change during a simulation, e.g.~atom
+attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
@@ -392,18 +379,18 @@ the rest of the information contained within the topology file. There
 are a range of force fields which perform these calculations in slightly
 different ways.
 
+% perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
+
 Parameterization needs to be done separately for the ligand and protein.
 Therefore, the first step is to separate the PDB file into two sets of
 coordinates - one for the ligand and one for the protein.
 
-\hypertarget{extract-protein-and-ligand-coordinates}{%
 \subsubsection{Extract protein and ligand
-coordinates}\label{extract-protein-and-ligand-coordinates}}
+coordinates}\label{extract-protein-and-ligand-coordinates}
 
 \begin{quote}
-\hypertarget{hands-on-task-description}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description}}
+description}\label{hands-on-task-description}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -438,7 +425,6 @@ description}\label{hands-on-task-description}}
   Rename output to `Ligand (PDB)'
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 \hypertarget{set-up-protein-topology}{%
@@ -448,9 +434,8 @@ Firstly, we need to calculate the topology for the protein file. We will
 use the \textbf{GROMACS initial setup} tool.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-1}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-1}}
+description}\label{hands-on-task-description-1}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -471,7 +456,6 @@ description}\label{hands-on-task-description-1}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 The tool produces four outputs: a GRO file (containing the coordinates
@@ -484,9 +468,8 @@ Please note all GROMACS tools output a log. Generally, you only need to
 look at this when a job fails. It provides useful information for
 debugging if we encounter any problems.
 
-\hypertarget{generate-a-topology-for-the-ligand}{%
 \subsubsection{Generate a topology for the
-ligand}\label{generate-a-topology-for-the-ligand}}
+ligand}\label{generate-a-topology-for-the-ligand}
 
 To generate a topology for the ligand, we will use the \textbf{acpype}
 tool. This provides a convenient interface to the AmberTools suite and
@@ -494,9 +477,8 @@ allows us to easily create the ligand topology in the format required by
 GROMACS.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-2}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-2}}
+description}\label{hands-on-task-description-2}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -521,25 +503,21 @@ description}\label{hands-on-task-description-2}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{solvation-and-energy-minimization}{%
 \subsection{Solvation and energy
-minimization}\label{solvation-and-energy-minimization}}
+minimization}\label{solvation-and-energy-minimization}
 
 Having generated topologies, we now need to combine them, define the box
 which contains the system, add solvent and ions, and perform an energy
 minimization step.
 
-\hypertarget{combine-topology-and-gro-files}{%
 \subsubsection{Combine topology and GRO
-files}\label{combine-topology-and-gro-files}}
+files}\label{combine-topology-and-gro-files}
 
 \begin{quote}
-\hypertarget{hands-on-combine-gro-files}{%
 \subsubsection{Hands-on: Combine GRO
-files}\label{hands-on-combine-gro-files}}
+files}\label{hands-on-combine-gro-files}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -563,14 +541,13 @@ files}\label{hands-on-combine-gro-files}}
 \item
   Click \texttt{Export} to save your changes as a new dataset. Make sure
   the datatype of the new file is still \texttt{GRO}. Rename to
-  \texttt{System\ GRO\ file}. \{: .hands\_on\}
+  \texttt{System\ GRO\ file}.
 \end{enumerate}
 \end{quote}
 
 \begin{quote}
-\hypertarget{hands-on-combine-topology-files}{%
 \subsubsection{Hands-on: Combine topology
-files}\label{hands-on-combine-topology-files}}
+files}\label{hands-on-combine-topology-files}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -607,7 +584,7 @@ files}\label{hands-on-combine-topology-files}}
 \item
   Click \texttt{Export} to save your changes as a new dataset. Make sure
   the datatype of the new file is still \texttt{TOP}. Rename to
-  \texttt{System\ topology}. \{: .hands\_on\}
+  \texttt{System\ topology}.
 \end{enumerate}
 \end{quote}
 
@@ -616,10 +593,11 @@ files here: LINK. However, you will find it useful to understand the
 information contained within topology files and learn how to make
 changes to it.
 
-\hypertarget{create-the-simulation-box-with-gromacs-structure-configuration}{%
+% needs updating with the new tool
+
 \subsubsection{\texorpdfstring{Create the simulation box with
 \textbf{GROMACS structure
-configuration}}{Create the simulation box with GROMACS structure configuration}}\label{create-the-simulation-box-with-gromacs-structure-configuration}}
+configuration}}{Create the simulation box with GROMACS structure configuration}}\label{create-the-simulation-box-with-gromacs-structure-configuration}
 
 The next step, once combined coordinate (GRO) and topology (TOP) files
 have been created, is to create a simulation box in which the system is
@@ -657,20 +635,16 @@ description}\label{hands-on-task-description-3}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{solvation}{%
-\subsubsection{Solvation}\label{solvation}}
-
+\subsubsection{Solvation}\label{solvation}
 The next step is solvation of the newly created simulation box. Note
 that the system is charged (depending on the pH) - the solvation tool
 also adds sodium or chloride ions as required to neutralise this.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-4}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-4}}
+description}\label{hands-on-task-description-4}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -691,19 +665,16 @@ description}\label{hands-on-task-description-4}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{energy-minimization}{%
-\subsubsection{Energy minimization}\label{energy-minimization}}
+\subsubsection{Energy minimization}\label{energy-minimization}
 
 The next step is energy minimization, which can be carried out using the
 \textbf{GROMACS energy minimization} tool.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-5}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-5}}
+description}\label{hands-on-task-description-5}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -737,11 +708,9 @@ description}\label{hands-on-task-description-5}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{equilibration}{%
-\subsection{Equilibration}\label{equilibration}}
+\subsection{Equilibration}\label{equilibration}
 
 We now carry out equilibration in two stages: NVT and NPT. This is
 discussed at greater length in the basic GROMACS tutorial. Equilibration
@@ -749,9 +718,8 @@ requires restraining the protein structure - we use the ITP file
 produced by the initial setup tool for this.
 
 \begin{quote}
-\hypertarget{hands-on-nvt-equilibration}{%
 \subsubsection{Hands-on: NVT
-equilibration}\label{hands-on-nvt-equilibration}}
+equilibration}\label{hands-on-nvt-equilibration}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -819,7 +787,6 @@ equilibration}\label{hands-on-nvt-equilibration}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 Having stabilized the temperature of the system with NVT equilibration,
@@ -832,9 +799,8 @@ parameters) by using the checkpoint (CPT) file saved at the end of the
 NVT simulation.
 
 \begin{quote}
-\hypertarget{hands-on-npt-equilibration}{%
 \subsubsection{Hands-on: NPT
-equilibration}\label{hands-on-npt-equilibration}}
+equilibration}\label{hands-on-npt-equilibration}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -907,11 +873,9 @@ equilibration}\label{hands-on-npt-equilibration}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{main-simulation}{%
-\subsection{Main simulation}\label{main-simulation}}
+\subsection{Main simulation}\label{main-simulation}
 
 We can now remove the restraints and continue with the simulation. The
 simulation will run for 1 million steps, with a step size of 1 fs, so
@@ -987,7 +951,6 @@ description}\label{hands-on-task-description-6}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 \hypertarget{analysis}{%

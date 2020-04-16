@@ -43,7 +43,7 @@
 
 %%% loading packages, author definitions
 
-%\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
+\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
 \documentclass{bmcart}
 
 %%% Load packages
@@ -97,7 +97,7 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{A sample article title}
+\title{Intuitive, reproducible high-throughput molecular dynamics in Galaxy: a tutorial}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -117,12 +117,20 @@
    addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
    corref={aff1},                       % id of corresponding address, if any
    noteref={n1},                        % id's of article notes, if any
-   email={jane.e.doe@cambridge.co.uk}   % email address
-]{\inits{JE}\fnm{Jane E} \snm{Doe}}
+   email={}   % email address
+]{\inits{SAB}\fnm{Simon A} \snm{Bray}}
+\author[
+   addressref={aff2},
+   email={}
+]{\inits{TS}\fnm{Tharindu} \snm{Senapathi}}
+\author[
+   addressref={aff2},
+   email={}
+]{\inits{CB}\fnm{Christopher} \snm{Barnett}}
 \author[
    addressref={aff1,aff2},
    email={john.RS.Smith@cambridge.co.uk}
-]{\inits{JRS}\fnm{John RS} \snm{Smith}}
+]{\inits{BG}\fnm{Björn} \snm{Grüning}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -134,14 +142,14 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \address[id=aff1]{%                           % unique id
-  \orgname{Department of Zoology, Cambridge}, % university, etc
-  \street{Waterloo Road},                     %
+   \orgname{Department of Computer Science, University of Freiburg}, % university, etc
+   \street{Georges-Köhler-Allee 106},                     %
   %\postcode{}                                % post or zip code
-  \city{London},                              % city
-  \cny{UK}                                    % country
+   \city{Freiburg},                              % city
+   \cny{Germany}                                    % country
 }
 \address[id=aff2]{%
-  \orgname{Marine Ecology Department, Institute of Marine Sciences Kiel},
+  \orgname{UCT ...},
   \street{D\"{u}sternbrooker Weg 20},
   \postcode{24105}
   \city{Kiel},

@@ -1,4 +1,4 @@
-%% BioMed_Central_Tex_Template_v1.06
+e% BioMed_Central_Tex_Template_v1.06
 %%                                      %
 %  bmc_article.tex            ver: 1.06 %
 %                                       %
@@ -998,16 +998,16 @@ description}\label{hands-on-task-description-6}}
 \hypertarget{analysis}{%
 \subsection*{Analysis}\label{analysis}}
 
-An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015} and Bio3D\cite{skjaerven_integrating_2014}.
-
-To check the stability and conformation of the protein and ligand through the course of the simulation RSMD and RMSF are used.
-
+An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015} and Bio3D\cite{skjaerven_integrating_2014}. See figure \ref{fig:analysisworkflow} for an overview of the workflow. 
 
 \begin{figure}[h!]
 \caption{\csentence{Analysis workflow.}
     Analysis workflow for Hsp90 with ligand}
 \centering
+\label{fig:analysisworkflow}
 \end{figure}
+
+To check the stability and conformation of the protein and ligand through the course of the simulation RMSD and RMSF are calculated. 
 
 
 
@@ -1072,12 +1072,12 @@ description}\label{hands-on-task-description-8}}
 
 \end{quote}
 
-\hypertarget{rmsd-analysis---protein}{%
-\subsection{RMSD analysis - protein}\label{rmsd-analysis---protein}}
+\hypertarget{rmsd-analysis}{%
+\subsection{RMSD analysis}\label{rmsd-analysis}}
 
 RMSD is a standard measure of structural distance between coordinate
 sets that measures the average distance between a group of atoms. The
-RMSD of the Cα atoms of the protein backbone is calculated here is and
+RMSD of the C\alpha atoms of the protein backbone is calculated here is and
 is a measure of how much the protein has changed between different time
 points in the trajectory.
 
@@ -1106,22 +1106,7 @@ description}\label{hands-on-task-description-9}}
 
 \end{quote}
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd1_series.png}
-\caption{RMSD timeseries Hsp90}
-\end{figure}
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd1_histo.png}
-\caption{RMSD histogram Hsp90}
-\end{figure}
-
-
-
-\hypertarget{rmsd-analysis---ligand}{%
-\subsection{RMSD analysis - ligand}\label{rmsd-analysis---ligand}}
 
 
 \begin{quote}
@@ -1193,26 +1178,11 @@ description}\label{hands-on-task-description-11}}
 \end{quote}
 
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd2_series.png}
-\caption{RMSD timeseries Hsp90 ligand}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd2_histo.png}
-\caption{RMSD histogram Hsp90 ligand}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_bindingposes.png}
-\caption{Hsp90 ligand binding poses}
-\end{figure}
 
 \hypertarget{rmsf-analysis}{%
 \subsection{RMSF analysis}\label{rmsf-analysis}}
+
+TODO why RMSF?
 
 \begin{quote}
 \hypertarget{hands-on-task-description-12}{%
@@ -1245,12 +1215,6 @@ description}\label{hands-on-task-description-12}}
 
 \end{quote}
 
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsf.png}
-\caption{RMSF Hsp90}
-\end{figure}
 
 \hypertarget{pca-analysis}{%
 \subsection{PCA analysis}\label{pca-analysis}}
@@ -1580,24 +1544,31 @@ After the completion of the simulation. An important questions will often be is 
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
-an average RMSD between 1 and 1.3. There are no large conformational changes during the simulation. The RMSD histogram confirms this.
+an average RMSD between 1 and 1.3. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. 
 
 \begin{figure}[h!]
   \caption{\csentence{RMSD for protein.}
       RMSD time series and histogram for the protein.}
+\label{fig:rmsdprotein}
       \end{figure}
+%\includegraphics{images/htmd_analysis_rmsd1_series.png}
+%\includegraphics{images/htmd_analysis_rmsd1_histo.png}
 
 \subsection*{RMSD ligand}
 Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If theligand is not stable the RMSD will fluctuate excessively and there will
 large fluctuations in the RMSD.
 
 In this case the RMSD seems to stabilise at 1.0 and then transitions back to 0.5. This is more clearly seen in the histogram. There is a bimodal distribution with centres at 0.3 and 1.0 which both have significant populations. There are two binding poses. These can be visually assessed. In this case the
-poses were viewed in VMD \cite{hump_vmd_1996} (see Figure).
+poses were viewed in VMD \cite{hump_vmd_1996} (see Figure \ref{fig:rmsdligand}).
 
 \begin{figure}[h!]
   \caption{\csentence{RMSD for the ligand.}
       RMSD time series and histogram for the ligand, inset are images of the ligand conformation.}
+\label{fig:rmsdligand}
       \end{figure}
+%\includegraphics{images/htmd_analysis_rmsd2_series.png}
+%\includegraphics{images/htmd_analysis_rmsd2_histo.png}
+%\includegraphics{images/htmd_analysis_bindingposes.png}
 
 \subsection*{RMSF}
 When considering the RMSF fluctuations greater than 1 Angstrom are worth
@@ -1606,6 +1577,13 @@ large fluctuations are seen for the final residues i.e.~the C-terminus.
 Fairly common and no investigation is needed. The movement could be
 related to binding or other motions.
 
+% possibly RMSF fig but not really needed
+\begin{figure}[h!]
+  \caption{\csentence{RMSF for the protein.}
+      RMSF}
+\label{fig:rmsf}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_rmsf.png}
 
 \subsection*{PCA}
 PCA breakdown (copy and paste from tutorial)

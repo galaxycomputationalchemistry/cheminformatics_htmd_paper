@@ -1000,7 +1000,7 @@ description}\label{hands-on-task-description-6}}
 
 An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015} and Bio3D\cite{skjaerven_integrating_2014}.
 
-To check the stability and conformation of the protein and ligand through the course of the simulatio we'll use RMSD, RMSF + explain
+To check the stability and conformation of the protein and ligand through the course of the simulation RSMD and RMSF are used.
 
 
 \begin{figure}[h!]
@@ -1123,14 +1123,6 @@ description}\label{hands-on-task-description-9}}
 \hypertarget{rmsd-analysis---ligand}{%
 \subsection{RMSD analysis - ligand}\label{rmsd-analysis---ligand}}
 
-Calculating the RMSD of the ligand is necessary to check if it is stable
-in the active site and to identidfy possible binding modes. If the
-ligand is not stable the RMSD will fluctuate excessively and there will
-large `jumps' in the RMSD.
-
-Note two RMSD's are run but only one is considered further. The tool has
-a ligand inference option but this may fail and instead the ligand is
-selected by residue ID.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-10}{%
@@ -1200,11 +1192,6 @@ description}\label{hands-on-task-description-11}}
 
 \end{quote}
 
-The RMSD seems to stabilise at 1.0 and then flips back to 0.5. This is
-more clearly seen in the histogram. There is a bimodal distribution with
-centres at 0.3 and 1.0 which both have significant populations. There
-are two binding poses. These can be visually assessed. In this case the
-poses were viewed in VMD.
 
 \begin{figure}
 \centering
@@ -1258,11 +1245,6 @@ description}\label{hands-on-task-description-12}}
 
 \end{quote}
 
-When considering the RMSF fluctuations greater than 1 Angstrom are worth
-considering. These are seen near residue position 50, 110 and 160. Very
-large fluctuations are seen for the final residues i.e.~the C-terminus.
-Fairly common and no investigation is needed. The movement could be
-related to binding or other motions.
 
 \begin{figure}
 \centering
@@ -1310,11 +1292,6 @@ description}\label{hands-on-task-description-13}}
 
 \end{quote}
 
-The first principal component (PC1) is most important accounting for
-32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
-information on PCA can be found in the
-\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
-tutorial}.
 
 \begin{figure}
 \centering
@@ -1605,14 +1582,45 @@ After the completion of the simulation. An important questions will often be is 
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
 an average RMSD between 1 and 1.3. There are no large conformational changes during the simulation. The RMSD histogram confirms this.
 
-\subsection*{RMSD ligand}
+\begin{figure}[h!]
+  \caption{\csentence{RMSD for protein.}
+      RMSD time series and histogram for the protein.}
+      \end{figure}
 
+\subsection*{RMSD ligand}
+Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If theligand is not stable the RMSD will fluctuate excessively and there will
+large fluctuations in the RMSD.
+
+In this case the RMSD seems to stabilise at 1.0 and then transitions back to 0.5. This is more clearly seen in the histogram. There is a bimodal distribution with centres at 0.3 and 1.0 which both have significant populations. There are two binding poses. These can be visually assessed. In this case the
+poses were viewed in VMD \cite{hump_vmd_1996} (see Figure).
+
+\begin{figure}[h!]
+  \caption{\csentence{RMSD for the ligand.}
+      RMSD time series and histogram for the ligand, inset are images of the ligand conformation.}
+      \end{figure}
+
+\subsection*{RMSF}
+When considering the RMSF fluctuations greater than 1 Angstrom are worth
+considering. These are seen near residue position 50, 110 and 160. Very
+large fluctuations are seen for the final residues i.e.~the C-terminus.
+Fairly common and no investigation is needed. The movement could be
+related to binding or other motions.
+
+
+\subsection*{PCA}
 PCA breakdown (copy and paste from tutorial)
+
+The first principal component (PC1) is most important accounting for
+32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
+information on PCA can be found in the
+\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
+tutorial}.
+
 
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
 
-We provide an overview of ... apply this to an example. 
+We provide an overview of ... 
 
 
 

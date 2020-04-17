@@ -76,7 +76,7 @@
                 \pic{orcidlogo};
                 \end{tikzpicture}
             }{|}}}}
-
+\usepackage{tcolorbox}
 \usepackage{lineno}
 \usepackage{textcomp}
 \usepackage{enumitem}
@@ -121,7 +121,8 @@
     \end{tabular} 
     \end{center}
     }    
- 
+    
+\newtcolorbox{handson_box_colour}{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm}
 
 %%% Begin ...
 \begin{document}
@@ -311,7 +312,7 @@ server. The estimated duration of this tutorial is around 3 hours.
 Molecular dynamics (MD) ... However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy, KNIME or CWL; both the former provide molecular dynamics tools/nodes.
 
 This tutorial provides a detailed workflow for high-throughput molecular dynamics using Galaxy. Galaxy
-\cite{afgan2018galaxy} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
+\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
 concept makes high-throughput sequencing data analysis a structured, reproducible and transparent process.
 
 The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS engine), to analysis of the results.
@@ -359,7 +360,12 @@ could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
 anti-tumor agents.
 
-
+\begin{figure}[h!]
+\caption{\csentence{Hsp90 cartoon view.}
+    Hsp90 cartoon rendered with ligands in active site}
+\centering
+\label{fig:Hsp90}
+\end{figure}
 
 \hypertarget{methods}{%
 \section*{Methods}\label{simulation}}
@@ -369,7 +375,8 @@ anti-tumor agents.
 \subsection{Get data}\label{get-data}
 
 First of all, download the required data.
-\begin{handson_box}
+
+\begin{abstract_box}
 \textbf{\emph{Hands-on: Data upload}}
 
 \begin{enumerate}
@@ -385,7 +392,7 @@ First of all, download the required data.
 \item
   Check that the datatype is correct (PDB file).
 \end{enumerate}
-\end{handson_box}
+\end{abstract_box}
 \subsection{Topology generation}\label{topology-generation}
 
 Now we have downloaded a PDB structure of the protein we wish to study, we will start parameterizing it for MD simulation.
@@ -981,7 +988,7 @@ description}\label{hands-on-task-description-6}}
 \end{quote}
 
 \hypertarget{analysis}{%
-\subsection*{Analysis}\label{analysis}}
+\section*{Analysis}\label{analysis}}
 
 An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015} and Bio3D\cite{skjaerven_integrating_2014}. See figure \ref{fig:analysisworkflow} for an overview of the workflow.
 
@@ -998,14 +1005,15 @@ To check the stability and conformation of the protein and ligand through the co
 
 
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
-\subsubsection{Create PDB file needed by most analysis
+\subsubsection*{Create PDB file needed by most analysis
 tools}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
 Convert the structural coordinates of the system in GRO format into PDB
 format. This file will be used by most analysis tools as a starting
 structure and ``it contains the topology of the system.''
 
-\begin{quote}
+\begin{handson_box_colour}
+
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1024,16 +1032,18 @@ structure and ``it contains the topology of the system.''
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 \hypertarget{convert-trajectory-to-dcd-format}{%
-\subsection{Convert trajectory to DCD
+\subsection*{Convert trajectory to DCD
 format}\label{convert-trajectory-to-dcd-format}}
 
 Convert from XTC to DCD format. A number of the analysis tools being
 used have been built to analyse trajectories in CHARMM's DCD format.
 
-\begin{quote}
+\begin{handson_box_colour}
+
+
 \hypertarget{hands-on-task-description-8}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-8}}
@@ -1051,21 +1061,20 @@ description}\label{hands-on-task-description-8}}
   \end{itemize}
 \end{enumerate}
 
-
-\end{quote}
+\end{handson_box_colour}
 
 \hypertarget{rmsd-analysis}{%
-\subsection{RMSD analysis}\label{rmsd-analysis}}
+\subsection*{RMSD analysis}\label{rmsd-analysis}}
 
 RMSD is a standard measure of structural distance between coordinate
 sets that measures the average distance between a group of atoms. The
-RMSD of the C\alpha atoms of the protein backbone is calculated here is and
+RMSD of the C$\alpha$ atoms of the protein backbone is calculated here is and
 is a measure of how much the protein has changed between different time
 points in the trajectory.
 
-\begin{quote}
+\begin{handson_box_colour}
 \hypertarget{hands-on-task-description-9}{%
-\subsubsection{Hands-on: Task
+\subsubsection*{Hands-on: Task
 description}\label{hands-on-task-description-9}}
 
 \begin{enumerate}
@@ -1086,14 +1095,8 @@ description}\label{hands-on-task-description-9}}
 \end{enumerate}
 
 
-\end{quote}
-
-
-
-
-\begin{quote}
 \hypertarget{hands-on-task-description-10}{%
-\subsubsection{Hands-on: Task
+\subsubsection*{Hands-on: Task
 description}\label{hands-on-task-description-10}}
 
 \begin{enumerate}
@@ -1120,11 +1123,8 @@ description}\label{hands-on-task-description-10}}
 \end{enumerate}
 
 
-\end{quote}
-
-\begin{quote}
 \hypertarget{hands-on-task-description-11}{%
-\subsubsection{Hands-on: Task
+\subsubsection*{Hands-on: Task
 description}\label{hands-on-task-description-11}}
 
 \begin{enumerate}
@@ -1157,16 +1157,18 @@ description}\label{hands-on-task-description-11}}
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 
 
 \hypertarget{rmsf-analysis}{%
-\subsection{RMSF analysis}\label{rmsf-analysis}}
+\subsection*{RMSF analysis}\label{rmsf-analysis}}
 
 The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. Here, we consider how the fluctuation of particular amino acids in the protein. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectrocopy.
 
-\begin{quote}
+\begin{handson_box_colour}
+
+
 \hypertarget{hands-on-task-description-12}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-12}}
@@ -1195,11 +1197,11 @@ description}\label{hands-on-task-description-12}}
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 
 \hypertarget{pca-analysis}{%
-\subsection{PCA analysis}\label{pca-analysis}}
+\subsection*{PCA analysis}\label{pca-analysis}}
 
 Principal component analysis (PCA) converts a set of correlated
 observations (movement of all atoms in protein) to a set of principal
@@ -1207,7 +1209,8 @@ components which are linearly independent (or uncorrelated). Here we
 will calculate the PCA, visualise it and also calculate the cosine
 content.
 
-\begin{quote}
+\begin{handson_box_colour}
+
 \hypertarget{hands-on-task-description-13}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-13}}
@@ -1236,11 +1239,6 @@ description}\label{hands-on-task-description-13}}
 \end{enumerate}
 
 
-\end{quote}
-
-
-
-\begin{quote}
 \hypertarget{hands-on-task-description-14}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-14}}
@@ -1266,11 +1264,10 @@ description}\label{hands-on-task-description-14}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
+\end{handson_box_colour}
 
-\end{quote}
+\begin{handson_box_colour}
 
-
-\begin{quote}
 \hypertarget{hands-on-task-description-15}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-15}}
@@ -1299,16 +1296,16 @@ description}\label{hands-on-task-description-15}}
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 
 \hypertarget{hydrogen-bond-analysis}{%
-\subsection{Hydrogen bond analysis}\label{hydrogen-bond-analysis}}
+\subsection*{Hydrogen bond analysis}\label{hydrogen-bond-analysis}}
 
 Hydrogen bonding interactions contribute to binding and are worth
 investigating, in particular persistent hydrogen bonds.
 
-\begin{quote}
+\begin{handson_box_colour}
 \hypertarget{hands-on-task-description-16}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-16}}
@@ -1340,11 +1337,11 @@ description}\label{hands-on-task-description-16}}
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 
 \hypertarget{optional-estimate-the-binding-free-energy}{%
-\subsection{Optional: Estimate the binding free
+\subsection*{Estimate the binding free
 energy}\label{optional-estimate-the-binding-free-energy}}
 
 We can estimate the binding free energy between a ligand and a receptor
@@ -1364,7 +1361,10 @@ AMBER's parmed to carry out the conversion. The result will be 4 prmtop
 files which are required for the binding free energy estimate
 calculation.
 
-\begin{quote}
+
+\begin{handson_box_colour}
+
+
 \hypertarget{hands-on-task-description-17}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-17}}
@@ -1399,7 +1399,7 @@ description}\label{hands-on-task-description-17}}
 
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
-\end{quote}
+\end{handson_box_colour}
 
 \hypertarget{binding-free-energy-estimate}{%
 \subsection{Binding free energy

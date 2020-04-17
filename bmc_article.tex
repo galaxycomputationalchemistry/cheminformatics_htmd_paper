@@ -43,8 +43,8 @@
 
 %%% loading packages, author definitions
 
-%\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
-\documentclass{bmcart}
+\documentclass[twocolumn]{bmcart}% uncomment this for twocolumn layout and comment line below
+% \documentclass{bmcart}
 
 %%% Load packages
 \usepackage{amsthm,amsmath}
@@ -54,10 +54,33 @@
 \usepackage[utf8]{inputenc} %unicode support
 %\usepackage[applemac]{inputenc} %applemac support if unicode package fails
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
+\usepackage{lineno} % for line numbers
+\usepackage{textcomp} % for single quotes
+% orcid code from https://tex.stackexchange.com/questions/445563/ieeetran-how-to-include-orcid-in-tex-pdf-with-pdflatex/445583#445583
+\usepackage{scalerel}
+\usepackage{tikz}
+\usetikzlibrary{svg.path}
+
+\definecolor{orcidlogocol}{HTML}{A6CE39}
+\tikzset{
+    orcidlogo/.pic={
+        \fill[orcidlogocol] svg{M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z};
+        \fill[white] svg{M86.3,186.2H70.9V79.1h15.4v48.4V186.2z}
+        svg{M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z}
+        svg{M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z};
+    }
+}
+
+\newcommand\orcidicon[1]{\href{https://orcid.org/#1}{\mbox{\scalerel*{
+                \begin{tikzpicture}[yscale=-1,transform shape]
+                \pic{orcidlogo};
+                \end{tikzpicture}
+            }{|}}}}
 
 \usepackage{lineno}
 \usepackage{textcomp}
 \usepackage{enumitem}
+\usepackage{hyperref} %<--- Load after everything else
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                             %%
@@ -83,8 +106,10 @@
 
 %%% Put your definitions there:
 \startlocaldefs
+\usepackage{url}
 \endlocaldefs
-
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
 
 %%% Begin ...
 \begin{document}
@@ -101,7 +126,7 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\title{A sample article title}
+\title{Intuitive, reproducible high-throughput molecular dynamics in Galaxy: a tutorial}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -117,16 +142,28 @@
 %%                                          %%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\author[
-   addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
-   corref={aff1},                       % id of corresponding address, if any
+\author[ addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
    noteref={n1},                        % id's of article notes, if any
-   email={jane.e.doe@cambridge.co.uk}   % email address
-]{\inits{JE}\fnm{Jane E} \snm{Doe}}
+   email={sbray1371@gmail.com}   % email address
+]{\inits{SAB}\fnm{Simon A} \snm{Bray}} \orcidicon{0000-0002-0621-6705}
 \author[
-   addressref={aff1,aff2},
-   email={john.RS.Smith@cambridge.co.uk}
-]{\inits{JRS}\fnm{John RS} \snm{Smith}}
+   addressref={aff2},
+   noteref={n1},
+   email={}
+]{\inits{TS}\fnm{Tharindu} \snm{Senapathi}} \orcidicon{0000-0002-3277-4022}
+\author[
+   addressref={aff2},
+   email={chris.barnett@uct.ac.za}
+]{\inits{CB}\fnm{Christopher B} \snm{Barnett}} \orcidicon{0000-0002-1467-5741}
+\author[
+   addressref={aff1},
+   corref={aff1},
+   email={gruening@informatik.uni-freiburg.de}
+]{\inits{BG}\fnm{Björn} \snm{Grüning}} \orcidicon{0000-0002-3079-6586}
+\author[
+   addressref={aff2},
+   email={kevin.naidoo@uct.ac.za}
+]{\inits{KJ}\fnm{Kevin J} \snm{Naidoo}} \orcidicon{0000-0002-9898-3708}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -138,19 +175,20 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \address[id=aff1]{%                           % unique id
-  \orgname{Department of Zoology, Cambridge}, % university, etc
-  \street{Waterloo Road},                     %
+   \orgname{Department of Computer Science, University of Freiburg}, % university, etc
+   \street{Georges-Köhler-Allee 106},                     %
   %\postcode{}                                % post or zip code
-  \city{London},                              % city
-  \cny{UK}                                    % country
+   \city{Freiburg},                              % city
+   \cny{Germany}                                    % country
 }
 \address[id=aff2]{%
-  \orgname{Marine Ecology Department, Institute of Marine Sciences Kiel},
-  \street{D\"{u}sternbrooker Weg 20},
-  \postcode{24105}
-  \city{Kiel},
-  \cny{Germany}
+  \orgname{Scientific Computing Research Unit, University of Cape Town},
+  \postcode{7700}
+  \city{Cape Town},
+  \cny{South Africa}
 }
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -182,11 +220,20 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-\parttitle{First part title} %if any
-Text for this section.
+This paper is a tutorial developed for the data analysis platform Galaxy. The
+Galaxy's concept makes high-throughput computational data analysis a
+structured, reproducible and transparent process. In this tutorial we
+focus on 3 questions: How are protein-ligand systems parameterized for
+molecular dynamics simulation? What kind of analysis can be carried out
+on molecular trajectories? How can high-throughput MD be used to study
+multiple ligands? After finishing you will be able to learn about
+force-fields and MD parameterization, learn how to conduct MD simulation
+and analysis for a protein-ligand system, understand how different
+molecular interactions contribute to the binding affinity of various
+ligands for the Hsp90 protein. Requirements for this tutorial is a
+minimal Galaxy experience and a Galaxy account on the Galaxy Europe
+server. The estimated duration of this tutorial is around 3 hours.
 
-\parttitle{Second part title} %if any
-Text for this section.
 \end{abstract}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -198,9 +245,9 @@ Text for this section.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{keyword}
-\kwd{sample}
-\kwd{article}
-\kwd{author}
+\kwd{Galaxy}
+\kwd{Molecular Dynamics}
+\kwd{Repeatable}
 \end{keyword}
 
 % MSC classifications codes, if any
@@ -243,79 +290,32 @@ Text for this section.
 %% Background %%
 %%
 
-\section*{Abstract}
-\textbf{TO ADD: why/aim (1st paragraph of the introduction)}. This paper
-is a tutorial developed for the data analysis platform Galaxy. The
-Galaxy's concept makes high-throughput sequencing data analysis a
-structured, reproducible and transparent process. In this tutorial we
-focus on 3 questions: How are protein-ligand systems parameterized for
-molecular dynamics simulation? What kind of analysis can be carried out
-on molecular trajectories? How can high-throughput MD be used to study
-multiple ligands? After finishing you will be able to learn about
-force-fields and MD parameterization, learn how to conduct MD simulation
-and analysis for a protein-ligand system, understand how different
-molecular interactions contribute to the binding affinity of various
-ligands for the Hsp90 protein.. Requirements for this tutorial is a
-minimal Galaxy experience and a Galaxy account on the Galaxy Europe
-server. The estimated duration of this tutorial is around 3 hours.
 
-% Please keep the Author Summary between 150 and 200 words
-% Use first person. PLOS ONE authors please skip this step. 
-% Author Summary not valid for PLOS ONE submissions.   
-\section*{Author summary}
-In this tutorial we focus on 3 questions: How are protein-ligand systems
-parameterized for molecular dynamics simulation? What kind of analysis
-can be carried out on molecular trajectories? How can high-throughput MD
-be used to study multiple ligands? After finishing this tutorial you
-will be able to learn about force-fields and MD parameterization, learn
-how to conduct MD simulation and analysis for a protein-ligand system,
-understand how different molecular interactions contribute to the
-binding affinity of various ligands for the Hsp90 protein..
-
-\linenumbers
+%\linenumbers
 
 \hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section*{Introduction}\label{introduction}}
 
-\textbf{\emph{TO ADD: why/aim (1st paragraph of the introduction)}}.
+Molecular dynamics (MD) ... However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy, KNIME or CWL; both the former provide molecular dynamics tools/nodes.
 
-This tutorial provides a detailed workflow for \textbf{\emph{TO ADD:
-outputs}} from \textbf{\emph{TO ADD: inputs}} using Galaxy. Galaxy
-\cite{afgan2018galaxy} is a data analysis platform that provides access
-to hundreds of tools used in a wide variety of analysis scenarios. It
-features a web-based user interface while automatically and
-transparently managing underlying computation details. The Galaxy's
-concept makes high-throughput sequencing data analysis a structured,
-reproducible and transparent process.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics using Galaxy. Galaxy
+\cite{afgan2018galaxy} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
+concept makes high-throughput sequencing data analysis a structured, reproducible and transparent process.
 
-The tutorial starts from \textbf{\emph{TO ADD: inputs}}. It runs first a
-\textbf{\emph{TO ADD: overview of each step (1 sentence) of the workflow
-with tool names in bold and citation.}}
+The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS engine), to analysis of the results.
 
-The entire analysis described this article can be conducted efficiently
-on any Galaxy server which has the needed tools. However, to be sure,
-the authors recommend to use the Galaxy Europe server
-(\url{https://usegalaxy.eu/}).
+The entire analysis described this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
+(\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/}).
 
-The tutorial presented in this article has been developed by the Galaxy
-Training Network \cite{batut2018community} and its most up-to-date
-version is available online on the
-\href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/hthtml-analysis_local/tutorial.html}{Galaxy
-Training Materials} website.
-
-\hypertarget{description-of-the-data}{%
-\section{Description of the data}\label{description-of-the-data}}
+The tutorial presented in this article has been developed by the Galaxy Training Network \cite{batut2018community} and its most up-to-date
+version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
 
 This tutorial provides an introduction to using high-throughput
 molecular dynamics to study protein-ligand interaction, as applied to
 N-terminus of Hsp90 (heat shock protein 90).
 
-\hypertarget{background}{%
-\section{Background}\label{background}}
-
-\hypertarget{what-is-high-throughput-molecular-dynamics}{%
-\subsection{What is high-throughput molecular
-dynamics?}\label{what-is-high-throughput-molecular-dynamics}}
+\subsection*{What is high-throughput molecular
+dynamics?}\label{what-is-high-throughput-molecular-dynamics}
 
 Molecular dynamics (MD) is a method to simulate molecular motion by
 iterative application of Newton's laws of motion. It is often applied to
@@ -326,9 +326,8 @@ tutorial provides a guide to setting up and running a high-throughput
 workflow for screening multiple small molecules, using the open-source
 GROMACS tools provided through the Galaxy platform.
 
-\hypertarget{why-is-hsp90-interesting-to-study}{%
-\subsection{Why is Hsp90 interesting to
-study?}\label{why-is-hsp90-interesting-to-study}}
+\subsection*{Why is Hsp90 interesting to
+study?}\label{why-is-hsp90-interesting-to-study}
 
 The 90 kDa heat shock protein (Hsp90) is a chaperone protein responsible
 for catalyzing the conversion of a wide variety of proteins to a
@@ -348,7 +347,13 @@ could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
 anti-tumor agents.
 
-\hypertarget{get-data}{%
+
+
+\hypertarget{methods}{%
+\section*{Methods}\label{simulation}}
+\hypertarget{simulation}{%
+\section*{Simulation}\label{simulation}}
+
 \subsection{Get data}\label{get-data}}
 
 First of all, download the required data.
@@ -359,24 +364,24 @@ First of all, download the required data.
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Create a new history for this tutorial \textgreater{} 3. Rename the
-  dataset to `Hsp90 structure' \textgreater{} 4. Check that the datatype
-  is correct (PDB file). \textgreater{} \textgreater{} \{: .hands\_on\}
+  Create a new history for this tutorial
+
+\item
+  Rename the dataset to `Hsp90 structure'
+\item
+  Search Galaxy for the 'Get PDB' tool. Request the accession code \texttt{6hhr}.
+\item
+  Check that the datatype is correct (PDB file).
 \end{enumerate}
 
-\hypertarget{simulation}{%
-\section{Simulation}\label{simulation}}
+\subsection{Topology generation}\label{topology-generation}
 
-\hypertarget{topology-generation}{%
-\subsection{Topology generation}\label{topology-generation}}
-
-Now we have downloaded a PDB structure of the protein we wish to study,
-we will start parameterizing it for MD simulation.
+Now we have downloaded a PDB structure of the protein we wish to study, we will start parameterizing it for MD simulation.
 
 GROMACS distinguishes between constant and dynamic attributes of the
-atoms in the system. The constant attributes (e.g.~atom charges, bonds
+atoms in the system. The constant attributes (e.g. atom charges, bonds
 connecting atoms) are listed in the topology (TOP file), while dynamic
-attributes (attributes that can change during a simulation, e.g.~atom
+attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
@@ -386,27 +391,26 @@ the rest of the information contained within the topology file. There
 are a range of force fields which perform these calculations in slightly
 different ways.
 
+% perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
+
 Parameterization needs to be done separately for the ligand and protein.
 Therefore, the first step is to separate the PDB file into two sets of
 coordinates - one for the ligand and one for the protein.
 
-\hypertarget{extract-protein-and-ligand-coordinates}{%
 \subsubsection{Extract protein and ligand
-coordinates}\label{extract-protein-and-ligand-coordinates}}
+coordinates}\label{extract-protein-and-ligand-coordinates}
 
 
 
 \begin{quote}
-\hypertarget{hands-on-task-description}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description}}
+description}\label{hands-on-task-description}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
   \textbf{Search in textfiles} with the following parameters:
-
   \begin{itemize}
   \tightlist
   \item
@@ -434,7 +438,7 @@ description}\label{hands-on-task-description}}
   Rename output to `Ligand (PDB)'
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
 \hypertarget{set-up-protein-topology}{%
@@ -444,9 +448,8 @@ Firstly, we need to calculate the topology for the protein file. We will
 use the \textbf{GROMACS initial setup} tool.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-1}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-1}}
+description}\label{hands-on-task-description-1}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -467,7 +470,7 @@ description}\label{hands-on-task-description-1}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
 The tool produces four outputs: a GRO file (containing the coordinates
@@ -480,9 +483,8 @@ Please note all GROMACS tools output a log. Generally, you only need to
 look at this when a job fails. It provides useful information for
 debugging if we encounter any problems.
 
-\hypertarget{generate-a-topology-for-the-ligand}{%
 \subsubsection{Generate a topology for the
-ligand}\label{generate-a-topology-for-the-ligand}}
+ligand}\label{generate-a-topology-for-the-ligand}
 
 To generate a topology for the ligand, we will use the \textbf{acpype}
 tool. This provides a convenient interface to the AmberTools suite and
@@ -490,9 +492,8 @@ allows us to easily create the ligand topology in the format required by
 GROMACS.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-2}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-2}}
+description}\label{hands-on-task-description-2}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -517,25 +518,21 @@ description}\label{hands-on-task-description-2}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{solvation-and-energy-minimization}{%
 \subsection{Solvation and energy
-minimization}\label{solvation-and-energy-minimization}}
+minimization}\label{solvation-and-energy-minimization}
 
 Having generated topologies, we now need to combine them, define the box
 which contains the system, add solvent and ions, and perform an energy
 minimization step.
 
-\hypertarget{combine-topology-and-gro-files}{%
 \subsubsection{Combine topology and GRO
-files}\label{combine-topology-and-gro-files}}
+files}\label{combine-topology-and-gro-files}
 
 \begin{quote}
-\hypertarget{hands-on-combine-gro-files}{%
 \subsubsection{Hands-on: Combine GRO
-files}\label{hands-on-combine-gro-files}}
+files}\label{hands-on-combine-gro-files}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -559,14 +556,13 @@ files}\label{hands-on-combine-gro-files}}
 \item
   Click \texttt{Export} to save your changes as a new dataset. Make sure
   the datatype of the new file is still \texttt{GRO}. Rename to
-  \texttt{System\ GRO\ file}. \{: .hands\_on\}
+  \texttt{System\ GRO\ file}.
 \end{enumerate}
 \end{quote}
 
 \begin{quote}
-\hypertarget{hands-on-combine-topology-files}{%
 \subsubsection{Hands-on: Combine topology
-files}\label{hands-on-combine-topology-files}}
+files}\label{hands-on-combine-topology-files}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -603,7 +599,7 @@ files}\label{hands-on-combine-topology-files}}
 \item
   Click \texttt{Export} to save your changes as a new dataset. Make sure
   the datatype of the new file is still \texttt{TOP}. Rename to
-  \texttt{System\ topology}. \{: .hands\_on\}
+  \texttt{System\ topology}.
 \end{enumerate}
 \end{quote}
 
@@ -612,10 +608,11 @@ files here: LINK. However, you will find it useful to understand the
 information contained within topology files and learn how to make
 changes to it.
 
-\hypertarget{create-the-simulation-box-with-gromacs-structure-configuration}{%
+% needs updating with the new tool
+
 \subsubsection{\texorpdfstring{Create the simulation box with
 \textbf{GROMACS structure
-configuration}}{Create the simulation box with GROMACS structure configuration}}\label{create-the-simulation-box-with-gromacs-structure-configuration}}
+configuration}}{Create the simulation box with GROMACS structure configuration}}\label{create-the-simulation-box-with-gromacs-structure-configuration}
 
 The next step, once combined coordinate (GRO) and topology (TOP) files
 have been created, is to create a simulation box in which the system is
@@ -653,20 +650,16 @@ description}\label{hands-on-task-description-3}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{solvation}{%
-\subsubsection{Solvation}\label{solvation}}
-
+\subsubsection{Solvation}\label{solvation}
 The next step is solvation of the newly created simulation box. Note
 that the system is charged (depending on the pH) - the solvation tool
 also adds sodium or chloride ions as required to neutralise this.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-4}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-4}}
+description}\label{hands-on-task-description-4}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -687,19 +680,16 @@ description}\label{hands-on-task-description-4}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{energy-minimization}{%
-\subsubsection{Energy minimization}\label{energy-minimization}}
+\subsubsection{Energy minimization}\label{energy-minimization}
 
 The next step is energy minimization, which can be carried out using the
 \textbf{GROMACS energy minimization} tool.
 
 \begin{quote}
-\hypertarget{hands-on-task-description-5}{%
 \subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-5}}
+description}\label{hands-on-task-description-5}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -733,11 +723,9 @@ description}\label{hands-on-task-description-5}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{equilibration}{%
-\subsection{Equilibration}\label{equilibration}}
+\subsection{Equilibration}\label{equilibration}
 
 We now carry out equilibration in two stages: NVT and NPT. This is
 discussed at greater length in the basic GROMACS tutorial. Equilibration
@@ -745,9 +733,8 @@ requires restraining the protein structure - we use the ITP file
 produced by the initial setup tool for this.
 
 \begin{quote}
-\hypertarget{hands-on-nvt-equilibration}{%
 \subsubsection{Hands-on: NVT
-equilibration}\label{hands-on-nvt-equilibration}}
+equilibration}\label{hands-on-nvt-equilibration}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -815,7 +802,6 @@ equilibration}\label{hands-on-nvt-equilibration}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 Having stabilized the temperature of the system with NVT equilibration,
@@ -828,9 +814,8 @@ parameters) by using the checkpoint (CPT) file saved at the end of the
 NVT simulation.
 
 \begin{quote}
-\hypertarget{hands-on-npt-equilibration}{%
 \subsubsection{Hands-on: NPT
-equilibration}\label{hands-on-npt-equilibration}}
+equilibration}\label{hands-on-npt-equilibration}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -903,11 +888,9 @@ equilibration}\label{hands-on-npt-equilibration}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
-\hypertarget{main-simulation}{%
-\subsection{Main simulation}\label{main-simulation}}
+\subsection{Main simulation}\label{main-simulation}
 
 We can now remove the restraints and continue with the simulation. The
 simulation will run for 1 million steps, with a step size of 1 fs, so
@@ -983,22 +966,27 @@ description}\label{hands-on-task-description-6}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
 \end{quote}
 
 \hypertarget{analysis}{%
-\section{Analysis}\label{analysis}}
+\subsection*{Analysis}\label{analysis}}
 
-Complete an analysis of the trajectory generated with Gromacs.
+An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015} and Bio3D\cite{skjaerven_integrating_2014}. See figure \ref{fig:analysisworkflow} for an overview of the workflow.
 
-\begin{figure}
+\begin{figure}[h!]
+\caption{\csentence{Analysis workflow.}
+    Analysis workflow for Hsp90 with ligand}
 \centering
-\includegraphics{images/workflow_htmd_analysis.png}
-\caption{Analysis workflow for Hsp90 with ligand}
+\label{fig:analysisworkflow}
 \end{figure}
 
+To check the stability and conformation of the protein and ligand through the course of the simulation RMSD and RMSF are calculated.
+
+
+
+
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
-\subsection{Create PDB file needed by most analysis
+\subsubsection{Create PDB file needed by most analysis
 tools}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
 Convert the structural coordinates of the system in GRO format into PDB
@@ -1006,9 +994,6 @@ format. This file will be used by most analysis tools as a starting
 structure and ``it contains the topology of the system.''
 
 \begin{quote}
-\hypertarget{hands-on-task-description-7}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-7}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1026,7 +1011,7 @@ description}\label{hands-on-task-description-7}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
 \hypertarget{convert-trajectory-to-dcd-format}{%
@@ -1054,16 +1039,16 @@ description}\label{hands-on-task-description-8}}
   \end{itemize}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-\hypertarget{rmsd-analysis---protein}{%
-\subsection{RMSD analysis - protein}\label{rmsd-analysis---protein}}
+\hypertarget{rmsd-analysis}{%
+\subsection{RMSD analysis}\label{rmsd-analysis}}
 
 RMSD is a standard measure of structural distance between coordinate
 sets that measures the average distance between a group of atoms. The
-RMSD of the Cα atoms of the protein backbone is calculated here is and
-is a measire of how much the protein has changed between different time
+RMSD of the C\alpha atoms of the protein backbone is calculated here is and
+is a measure of how much the protein has changed between different time
 points in the trajectory.
 
 \begin{quote}
@@ -1088,36 +1073,11 @@ description}\label{hands-on-task-description-9}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd1_series.png}
-\caption{RMSD timeseries Hsp90}
-\end{figure}
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd1_histo.png}
-\caption{RMSD histogram Hsp90}
-\end{figure}
 
-RMSD timeseries shows a thermally stable and equilibrated structure with
-an average RMSD between 1 and 1.3. There are no large conformational
-changes during the simulation. The RMSD histogram confirms this.
-
-\hypertarget{rmsd-analysis---ligand}{%
-\subsection{RMSD analysis - ligand}\label{rmsd-analysis---ligand}}
-
-Calculating the RMSD of the ligand is necessary to check if it is stable
-in the active site and to identidfy possible binding modes. If the
-ligand is not stable the RMSD will fluctuate excessively and there will
-large `jumps' in the RMSD.
-
-Note two RMSD's are run but only one is considered further. The tool has
-a ligand inference option but this may fail and instead the ligand is
-selected by residue ID.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-10}{%
@@ -1147,7 +1107,7 @@ description}\label{hands-on-task-description-10}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
 \begin{quote}
@@ -1184,35 +1144,15 @@ description}\label{hands-on-task-description-11}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-The RMSD seems to stabilise at 1.0 and then flips back to 0.5. This is
-more clearly seen in the histogram. There is a bimodal distribution with
-centres at 0.3 and 1.0 which both have significant populations. There
-are two binding poses. These can be visually assessed. In this case the
-poses were viewed in VMD.
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd2_series.png}
-\caption{RMSD timeseries Hsp90 ligand}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsd2_histo.png}
-\caption{RMSD histogram Hsp90 ligand}
-\end{figure}
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_bindingposes.png}
-\caption{Hsp90 ligand binding poses}
-\end{figure}
 
 \hypertarget{rmsf-analysis}{%
 \subsection{RMSF analysis}\label{rmsf-analysis}}
+
+The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. Here, we consider how the fluctuation of particular amino acids in the protein. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectrocopy.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-12}{%
@@ -1242,20 +1182,9 @@ description}\label{hands-on-task-description-12}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-When considering the RMSF fluctuations greater than 1 Angstrom are worth
-considering. These are seen near residue position 50, 110 and 160. Very
-large fluctuations are seen for the final residues i.e.~the C-terminus.
-Fairly common and no investigation is needed. The movement could be
-related to binding or other motions.
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_rmsf.png}
-\caption{RMSF Hsp90}
-\end{figure}
 
 \hypertarget{pca-analysis}{%
 \subsection{PCA analysis}\label{pca-analysis}}
@@ -1294,28 +1223,10 @@ description}\label{hands-on-task-description-13}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-The first principal component (PC1) is most important accounting for
-32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
-information on PCA can be found in the
-\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
-tutorial}.
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_pca.png}
-\caption{PCA Hsp90}
-\end{figure}
-
-The RMSF is in good correlation with PC1.
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_pc1_rmsf.png}
-\caption{PC1 RMSF Hsp90}
-\end{figure}
 
 \begin{quote}
 \hypertarget{hands-on-task-description-14}{%
@@ -1343,12 +1254,9 @@ description}\label{hands-on-task-description-14}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-The cosine content is 0.084. Non-converged simulations have a value
-close to 1. This value indicates that sampling is most likely
-sufficient.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-15}{%
@@ -1378,11 +1286,9 @@ description}\label{hands-on-task-description-15}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-*** TODO *** gif of PCA1 \includegraphics{images/image_name}
-\includegraphics{images/htmd_analysis_pc1_hsp90.gif}
 
 \hypertarget{hydrogen-bond-analysis}{%
 \subsection{Hydrogen bond analysis}\label{hydrogen-bond-analysis}}
@@ -1421,14 +1327,9 @@ description}\label{hands-on-task-description-16}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
-The active site of this protein is quite hydrophobic. Only 1 hydrogen
-bond is seen between the ligand andHsp90, this is between Threonine 184
-and the ligand. This hydogren bond is not persisent, the occupancy is
-small, 0.20\%, the hydrogen is not present for most of the simulation
-(according to the criteria for hydrogen bonding).
 
 \hypertarget{optional-estimate-the-binding-free-energy}{%
 \subsection{Optional: Estimate the binding free
@@ -1554,17 +1455,17 @@ description}\label{hands-on-task-description-18}}
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
-\{: .hands\_on\}
+
 \end{quote}
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
-\section{Optional: Automating high throughput
+\subsection*{Optional: Automating high throughput
 calculations}\label{optional-automating-high-throughput-calculations}}
 
 In the scenario where large batches of simulations are needed, then
 strategies to automate this process are needed. Before rushing into high
 throughput make sure to understand your process, the tools and
-paramters, data and outputs quite well. Junk in will mean junk out. The
+parameters, data and outputs quite well. Junk in will mean junk out. The
 same applies for high throughput, but you will get more junk and waste
 more resources. First understand the complete process for at least 2
 systems and use this experience to understand where errors are likely to
@@ -1574,7 +1475,7 @@ give reasonable results.\\
 At this point you may realise that manual intervention is required for
 certain systems. If this is at the setup stage, then create multiple
 histories (either manually or perhaps with bioblend), complete the
-manaual task and then run a workflow. Realise if there is a manual task,
+manual task and then run a workflow. Realise if there is a manual task,
 automation can only be applied to part of the system. Maybe manually
 choosing to run workflows will be sufficient. Third start to consider
 automation. Create a history with data that has been made into a
@@ -1584,16 +1485,84 @@ consider using bioblend.
 https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html
 https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html
 
+\hypertarget{resultsanddiscussion}{%
+\section*{Results and Discussion}\label{resultsanddiscussion}}
+After the completion of the simulation. An important questions will often be is the simulation length sufficient. The timescale of motions of interest are in the ps to ns range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein then $\mu$s sampling would be needed, but this is not the purpose here. The PCA cosine content is another measure if it is close to 1 then the length is insufficient. While close to 0 is not enough to determine that this is sufficient. Here, the cosine content is 0.084, indicating that sampling is most likely sufficient.
+
+\subsection*{RMSD protein}
+The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
+an average RMSD between 1 and 1.3. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}.
+
+\begin{figure}[h!]
+  \caption{\csentence{RMSD for protein.}
+      RMSD time series and histogram for the protein.}
+\label{fig:rmsdprotein}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_rmsd1_series.png}
+%\includegraphics{images/htmd_analysis_rmsd1_histo.png}
+
+\subsection*{RMSD ligand}
+Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If theligand is not stable the RMSD will fluctuate excessively and there will
+large fluctuations in the RMSD.
+
+In this case the RMSD seems to stabilise at 1.0 and then transitions back to 0.5. This is more clearly seen in the histogram. There is a bimodal distribution with centres at 0.3 and 1.0 which both have significant populations. There are two binding poses. These can be visually assessed. In this case the
+poses were viewed in VMD \cite{hump_vmd_1996} (see Figure \ref{fig:rmsdligand}).
+
+\begin{figure}[h!]
+  \caption{\csentence{RMSD for the ligand.}
+      RMSD time series and histogram for the ligand, inset are images of the ligand conformation.}
+\label{fig:rmsdligand}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_rmsd2_series.png}
+%\includegraphics{images/htmd_analysis_rmsd2_histo.png}
+%\includegraphics{images/htmd_analysis_bindingposes.png}
+
+\subsection*{RMSF}
+When considering the RMSF fluctuations greater than 1 Angstrom are worth
+considering. These are seen near residue position 50, 110 and 160. Very
+large fluctuations are seen for the final residues i.e.~the C-terminus.
+Fairly common and no investigation is needed. The movement could be
+related to binding or other motions.
+
+% possibly RMSF fig but not really needed
+\begin{figure}[h!]
+  \caption{\csentence{RMSF for the protein.}
+      RMSF}
+\label{fig:rmsf}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_rmsf.png}
+
+\subsection*{PCA}
+
+The first principal component (PC1) is most important accounting for
+32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
+information on PCA can be found in the
+\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
+tutorial}. The RMSF is in good correlation with PC1.
+
+\begin{figure}[h!]
+  \caption{\csentence{Principal Component Analysis.}
+      PCA.}
+\label{fig:rmsdligand}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_pca.png}
+%\includegraphics{images/htmd_analysis_pc1_rmsf.png}
+
+\subsection*{Hydrogen bonding and further analysis}
+The active site of this protein is quite hydrophobic. Only 1 hydrogen
+bond is seen between the ligand and Hsp90, this is between Threonine 184
+and the ligand. This hydogren bond is not persisent, the occupancy is
+small, 0.20\%, the hydrogen is not present for most of the simulation
+(according to the criteria for hydrogen bonding).
+There are many alternative analyses that have not been considered for the sake of brevity. TODO consider adding another line or two.
+
+
 \hypertarget{conclusion}{%
-\section{Conclusion}\label{conclusion}}
+\section*{Conclusion}\label{conclusion}}
 
-\{:.no\_toc\}
+We provide an overview of ...
 
-Sum up the tutorial and the key takeaways here. We encourage adding an
-overview image of the pipeline used.
 
-\section*{Content}
-Text and results for this section, as per the individual journal's instructions for authors. %\cite{koon,oreg,khar,zvai,xjon,schn,pond,smith,marg,hunn,advi,koha,mouse}
 
 \section*{Section title}
 Text for this section \ldots
@@ -1604,37 +1573,7 @@ Text for this sub-sub-heading \ldots
 \paragraph*{Sub-sub-sub heading for section}
 Text for this sub-sub-sub-heading \ldots
 In this section we examine the growth rate of the mean of $Z_0$, $Z_1$ and $Z_2$. In
-addition, we examine a common modeling assumption and note the
-importance of considering the tails of the extinction time $T_x$ in
-studies of escape dynamics.
-We will first consider the expected resistant population at $vT_x$ for
-some $v>0$, (and temporarily assume $\alpha=0$)
-%
-\[
- E \bigl[Z_1(vT_x) \bigr]= E
-\biggl[\mu T_x\int_0^{v\wedge
-1}Z_0(uT_x)
-\exp \bigl(\lambda_1T_x(v-u) \bigr)\,du \biggr].
-\]
-%
-If we assume that sensitive cells follow a deterministic decay
-$Z_0(t)=xe^{\lambda_0 t}$ and approximate their extinction time as
-$T_x\approx-\frac{1}{\lambda_0}\log x$, then we can heuristically
-estimate the expected value as
-%
-\begin{eqnarray}\label{eqexpmuts}
-E\bigl[Z_1(vT_x)\bigr] &=& \frac{\mu}{r}\log x
-\int_0^{v\wedge1}x^{1-u}x^{({\lambda_1}/{r})(v-u)}\,du
-\nonumber\\
-&=& \frac{\mu}{r}x^{1-{\lambda_1}/{\lambda_0}v}\log x\int_0^{v\wedge
-1}x^{-u(1+{\lambda_1}/{r})}\,du
-\nonumber\\
-&=& \frac{\mu}{\lambda_1-\lambda_0}x^{1+{\lambda_1}/{r}v} \biggl(1-\exp \biggl[-(v\wedge1) \biggl(1+
-\frac{\lambda_1}{r}\biggr)\log x \biggr] \biggr).
-\end{eqnarray}
-%
-Thus we observe that this expected value is finite for all $v>0$ (also see \cite{koon,khar,zvai,xjon,marg}).
-%\nocite{oreg,schn,pond,smith,marg,hunn,advi,koha,mouse}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                          %%
@@ -1652,6 +1591,10 @@ Thus we observe that this expected value is finite for all $v>0$ (also see \cite
 
 \section*{Acknowledgements}
   Text for this section \ldots
+
+\section*{Data and material availability}
+  Data and materials are available on GitHub:
+  TODO\ldots
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                  The Bibliography                       %%
 %%                                                         %%
@@ -1707,25 +1650,6 @@ Thus we observe that this expected value is finite for all $v>0$ (also see \cite
       Figure legend text.}
       \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%                               %%
-%% Tables                        %%
-%%                               %%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%% Use of \listoftables is discouraged.
-%%
-\section*{Tables}
-\begin{table}[h!]
-\caption{Sample table title. This is where the description of the table should go.}
-      \begin{tabular}{cccc}
-        \hline
-           & B1  &B2   & B3\\ \hline
-        A1 & 0.1 & 0.2 & 0.3\\
-        A2 & ... & ..  & .\\
-        A3 & ..  & .   & .\\ \hline
-      \end{tabular}
-\end{table}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                               %%

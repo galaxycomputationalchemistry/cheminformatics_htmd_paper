@@ -56,6 +56,8 @@
 %\usepackage[latin1]{inputenc} %UNIX support if unicode package fails
 
 \usepackage{lineno}
+\usepackage{textcomp}
+\usepackage{enumitem}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                             %%
@@ -626,13 +628,13 @@ description}\label{hands-on-task-description-3}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
-\tightlist
+%\tightlist
 \item
   \textbf{GROMACS structure configuration} with the following
   parameters:
 
   \begin{itemize}
-  \tightlist
+%  \tightlist
   \item
     \emph{``Input structure''}: \texttt{System\ GRO\ file} (Input
     dataset)
@@ -640,7 +642,7 @@ description}\label{hands-on-task-description-3}}
     \emph{``Configure box?''}: \texttt{Yes}
 
     \begin{itemize}
-    \tightlist
+%    \tightlist
     \item
       \emph{``Box dimensions in nanometers''}: \texttt{1.0}
     \item
@@ -1523,7 +1525,7 @@ description}\label{hands-on-task-description-18}}
     In \emph{``General parameters''}:
 
     \begin{itemize}
-    \tightlist
+    %\tightlist
     \item
       \emph{``Final frame to analyse''}: \texttt{2000}
     \item

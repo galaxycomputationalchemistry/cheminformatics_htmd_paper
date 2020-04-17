@@ -110,6 +110,18 @@
 \endlocaldefs
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+ \newenvironment{handson_box}
+    {\begin{center}
+    
+    \begin{tabular}{|p{0.9\textwidth/2}|}
+    \hline\\
+    }
+    { 
+    \\\\\hline
+    \end{tabular} 
+    \end{center}
+    }    
+ 
 
 %%% Begin ...
 \begin{document}
@@ -354,10 +366,10 @@ anti-tumor agents.
 \hypertarget{simulation}{%
 \section*{Simulation}\label{simulation}}
 
-\subsection{Get data}\label{get-data}}
+\subsection{Get data}\label{get-data}
 
 First of all, download the required data.
-
+\begin{handson_box}
 \textbf{\emph{Hands-on: Data upload}}
 
 \begin{enumerate}
@@ -373,7 +385,7 @@ First of all, download the required data.
 \item
   Check that the datatype is correct (PDB file).
 \end{enumerate}
-
+\end{handson_box}
 \subsection{Topology generation}\label{topology-generation}
 
 Now we have downloaded a PDB structure of the protein we wish to study, we will start parameterizing it for MD simulation.

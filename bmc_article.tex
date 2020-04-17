@@ -1,4 +1,4 @@
-e% BioMed_Central_Tex_Template_v1.06
+% BioMed_Central_Tex_Template_v1.06
 %%                                      %
 %  bmc_article.tex            ver: 1.06 %
 %                                       %
@@ -1013,7 +1013,7 @@ To check the stability and conformation of the protein and ligand through the co
 
 
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
-\subsection{Create PDB file needed by most analysis
+\subsubsection{Create PDB file needed by most analysis
 tools}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
 Convert the structural coordinates of the system in GRO format into PDB
@@ -1021,9 +1021,6 @@ format. This file will be used by most analysis tools as a starting
 structure and ``it contains the topology of the system.''
 
 \begin{quote}
-\hypertarget{hands-on-task-description-7}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-7}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1182,7 +1179,7 @@ description}\label{hands-on-task-description-11}}
 \hypertarget{rmsf-analysis}{%
 \subsection{RMSF analysis}\label{rmsf-analysis}}
 
-TODO why RMSF?
+The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. Here, we consider how the fluctuation of particular amino acids in the protein. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectrocopy.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-12}{%
@@ -1257,19 +1254,6 @@ description}\label{hands-on-task-description-13}}
 \end{quote}
 
 
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_pca.png}
-\caption{PCA Hsp90}
-\end{figure}
-
-The RMSF is in good correlation with PC1.
-
-\begin{figure}
-\centering
-\includegraphics{images/htmd_analysis_pc1_rmsf.png}
-\caption{PC1 RMSF Hsp90}
-\end{figure}
 
 \begin{quote}
 \hypertarget{hands-on-task-description-14}{%
@@ -1300,9 +1284,6 @@ description}\label{hands-on-task-description-14}}
 
 \end{quote}
 
-The cosine content is 0.084. Non-converged simulations have a value
-close to 1. This value indicates that sampling is most likely
-sufficient.
 
 \begin{quote}
 \hypertarget{hands-on-task-description-15}{%
@@ -1335,8 +1316,6 @@ description}\label{hands-on-task-description-15}}
 
 \end{quote}
 
-*** TODO *** gif of PCA1 \includegraphics{images/image_name}
-\includegraphics{images/htmd_analysis_pc1_hsp90.gif}
 
 \hypertarget{hydrogen-bond-analysis}{%
 \subsection{Hydrogen bond analysis}\label{hydrogen-bond-analysis}}
@@ -1378,11 +1357,6 @@ description}\label{hands-on-task-description-16}}
 
 \end{quote}
 
-The active site of this protein is quite hydrophobic. Only 1 hydrogen
-bond is seen between the ligand and Hsp90, this is between Threonine 184
-and the ligand. This hydogren bond is not persisent, the occupancy is
-small, 0.20\%, the hydrogen is not present for most of the simulation
-(according to the criteria for hydrogen bonding).
 
 \hypertarget{optional-estimate-the-binding-free-energy}{%
 \subsection{Optional: Estimate the binding free
@@ -1575,7 +1549,7 @@ When considering the RMSF fluctuations greater than 1 Angstrom are worth
 considering. These are seen near residue position 50, 110 and 160. Very
 large fluctuations are seen for the final residues i.e.~the C-terminus.
 Fairly common and no investigation is needed. The movement could be
-related to binding or other motions.
+related to binding or other motions. 
 
 % possibly RMSF fig but not really needed
 \begin{figure}[h!]
@@ -1586,13 +1560,28 @@ related to binding or other motions.
 %\includegraphics{images/htmd_analysis_rmsf.png}
 
 \subsection*{PCA}
-PCA breakdown (copy and paste from tutorial)
 
 The first principal component (PC1) is most important accounting for
 32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
 information on PCA can be found in the
 \href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
-tutorial}.
+tutorial}. The RMSF is in good correlation with PC1. 
+
+\begin{figure}[h!]
+  \caption{\csentence{Principal Component Analysis.}
+      PCA.}
+\label{fig:rmsdligand}
+      \end{figure}
+%\includegraphics{images/htmd_analysis_pca.png}
+%\includegraphics{images/htmd_analysis_pc1_rmsf.png}
+
+\subsection*{Hydrogen bonding and further analysis}
+The active site of this protein is quite hydrophobic. Only 1 hydrogen
+bond is seen between the ligand and Hsp90, this is between Threonine 184
+and the ligand. This hydogren bond is not persisent, the occupancy is
+small, 0.20\%, the hydrogen is not present for most of the simulation
+(according to the criteria for hydrogen bonding).
+There are many alternative analyses that have not been considered for the sake of brevity. TODO consider adding another line or two.
 
 
 \hypertarget{conclusion}{%

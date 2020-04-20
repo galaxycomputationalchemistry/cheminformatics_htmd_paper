@@ -110,8 +110,7 @@
 \startlocaldefs
 \usepackage{url}
 \endlocaldefs
-\providecommand{\tightlist}{%
-  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
  \newenvironment{handson_box}
     {\begin{center}
     
@@ -322,8 +321,7 @@ The aim of this tutorial is to guide the user through the various steps of a mol
 The entire analysis described this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
 (\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/}).
 
-The tutorial presented in this article has been developed by the Galaxy Training Network \cite{batut2018community} and its most up-to-date
-version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
+The tutorial presented in this article has been developed by the Galaxy Training Network \cite{Batut2018} and its most up-to-date version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
 
 This tutorial provides an introduction to using high-throughput
 molecular dynamics to study protein-ligand interaction, as applied to
@@ -370,7 +368,7 @@ anti-tumor agents.
 \end{figure}
 
 \hypertarget{methods}{%
-\section*{Methods}\label{simulation}}
+\section*{Methods}\label{methods}}
 \hypertarget{simulation}{%
 \section*{Simulation}\label{simulation}}
 
@@ -1357,8 +1355,8 @@ calculation is recommended here as it completes in reasonable time.
 \subsubsection{Converting parameters}\label{converting-parameters}}
 
 The MMPBSA tool supports the AMBER topology format only. To convert from GROMACS
-`.top` and `.gro` to AMBER topologies, use the following tool which uses
-AMBER's parmed to carry out the conversion. The result will be 4 prmtop
+'.top' and '.gro' to AMBER topologies, use the following tool which uses
+AMBER's parmed to carry out the conversion. The result will be 4 AMBER'.prmtop'
 files which are required for the binding free energy estimate
 calculation.
 
@@ -1406,7 +1404,7 @@ description}\label{hands-on-task-description-17}}
 \subsection{Binding free energy
 estimate}\label{binding-free-energy-estimate}}
 
-\begin{quote}
+\begin{handson_box_colour}
 \hypertarget{hands-on-task-description-18}{%
 \subsubsection{Hands-on: Task
 description}\label{hands-on-task-description-18}}
@@ -1445,7 +1443,7 @@ description}\label{hands-on-task-description-18}}
     \item
       \emph{``interval between frames analysed''}: \texttt{5}
     \item
-      \emph{``quasi-harmonic entropy calculation''}: \texttt{Yes}
+      \emph{``quasi-harmonic entropy calculation''}: \texttt{No}
     \item
       \emph{``Strip mask''}: \texttt{:NA:SOL:CL}
     \end{itemize}
@@ -1463,17 +1461,17 @@ description}\label{hands-on-task-description-18}}
     \end{itemize}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
+  \textbf{\emph{TODO}}: \emph{Check parameter descriptions - note entropy was set to Yes and this is incorrect.}
 
   \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 
-\end{quote}
+\end{handson_box_colour}
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
-\subsection*{Optional: Automating high throughput
-calculations}\label{optional-automating-high-throughput-calculations}}
+\subsection*{Automating high throughput
+calculations with Galaxy}\label{optional-automating-high-throughput-calculations}}
 
 In the scenario where large batches of simulations are needed, then
 strategies to automate this process are needed. Before rushing into high
@@ -1485,7 +1483,7 @@ systems and use this experience to understand where errors are likely to
 occur. Second create a workflow and run this on 2-3 systems. Again check
 for errors, complete a cursory analysis to ensure selected parameters
 give reasonable results.\\
-At this point you may realise that manual intervention is required for
+At this point you may realize that manual intervention is required for
 certain systems. If this is at the setup stage, then create multiple
 histories (either manually or perhaps with bioblend), complete the
 manual task and then run a workflow. Realise if there is a manual task,
@@ -1493,10 +1491,11 @@ automation can only be applied to part of the system. Maybe manually
 choosing to run workflows will be sufficient. Third start to consider
 automation. Create a history with data that has been made into a
 collection. Run your workflow. If this works that is great. If not
-consider using bioblend.
+consider using BioBlend \cite{slogett_bioblend} and write scripts that interact with Galaxy via the API. 
+Galaxy Training Material is available for both \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collections} and \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{BioBlend}
 
-https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html
-https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html
+
+
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
@@ -1569,6 +1568,7 @@ small, 0.20\%, the hydrogen is not present for most of the simulation
 (according to the criteria for hydrogen bonding).
 There are many alternative analyses that have not been considered for the sake of brevity. TODO consider adding another line or two.
 
+An MMGBSA calculation using a single trajectory yields an binding estimate of -19.62 kcal/mol for this ligand. This negative value suggests a favorable complex, however the entropy contribution was not measured.
 
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
@@ -1608,6 +1608,13 @@ In this section we examine the growth rate of the mean of $Z_0$, $Z_1$ and $Z_2$
 \section*{Data and material availability}
   Data and materials are available on GitHub:
   TODO\ldots
+  \begin{itemize}
+  \item   Public European Galaxy server(\url{https://cheminformatics.usegalaxy.eu/}) 
+  \item Galaxy Computation Chemistry South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/})
+  \item Galaxy Training Materials website (\url{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html})
+\end{itemize}
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                  The Bibliography                       %%
 %%                                                         %%

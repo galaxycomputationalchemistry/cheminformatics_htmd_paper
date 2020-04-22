@@ -673,7 +673,7 @@
               \labelwidth\leftmarginiii
               \advance\labelwidth-\labelsep
               \topsep\z@
-              \parsep z@
+              \parsep \z@
               \partopsep\z@
               \itemsep\topsep}
 

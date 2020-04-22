@@ -122,8 +122,10 @@
     \end{tabular} 
     \end{center}
     }    
-    
-\newtcolorbox{handson_box_colour}{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm}
+
+\newcounter{handsoncounter}
+\newtcolorbox[use counter=handsoncounter,number format=\arabic]{handson_box_colour}[2][]{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm, title=Hands-on \thetcbcounter: #2,#1}
+%\newtcolorbox{handson_box_colour}{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm}
 
 %%% Begin ...
 \begin{document}
@@ -310,22 +312,18 @@ server. The estimated duration of this tutorial is around 3 hours.
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
 
-Molecular dynamics (MD) ... However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy, KNIME or CWL; both the former provide molecular dynamics tools/nodes.
+Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins. However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, KNIME or CWL; all of which provide molecular dynamics tools/nodes.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics using Galaxy. Galaxy
-\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
-concept makes high-throughput sequencing data analysis a structured, reproducible and transparent process.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics using Galaxy, using the N-terminus of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
+concept makes high-throughput data analysis a structured, reproducible and transparent process.
 
-The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS engine), to analysis of the results.
+The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015} engine), to analysis of the results.
 
 The entire analysis described this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
 (\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/}).
 
 The tutorial presented in this article has been developed by the Galaxy Training Network \cite{Batut2018} and its most up-to-date version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
 
-This tutorial provides an introduction to using high-throughput
-molecular dynamics to study protein-ligand interaction, as applied to
-N-terminus of Hsp90 (heat shock protein 90).
 
 \subsection*{What is high-throughput molecular
 dynamics?}\label{what-is-high-throughput-molecular-dynamics}
@@ -346,7 +344,7 @@ The 90 kDa heat shock protein (Hsp90) is a chaperone protein responsible
 for catalyzing the conversion of a wide variety of proteins to a
 functional form; examples of the Hsp90 clientele, which totals several
 hundred proteins, include nuclear steroid hormone receptors and protein
-kinases. The mechanism by which Hsp90 acts varies between clients, as
+kinases.~\cite{Pearl2006} The mechanism by which Hsp90 acts varies between clients, as
 does the client binding site; the process is dependent on
 post-translational modifications of Hsp90 and the identity of
 co-chaperones which bind and regulate the conformational cycle.
@@ -374,10 +372,10 @@ anti-tumor agents.
 
 \subsection{Get data}\label{get-data}
 
-First of all, download the required data.
+As a first step, we download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6hhr}~\cite{Schuetz2018} and shows Hsp90 in complex with a ligand belonging to the resorcinol class.
 
-\begin{abstract_box}
-\textbf{\emph{Hands-on: Data upload}}
+\begin{handson_box_colour}
+\textbf{Hands-on: Data upload}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -388,11 +386,12 @@ First of all, download the required data.
 \item
   Rename the dataset to `Hsp90 structure'
 \item
-  Search Galaxy for the 'Get PDB' tool. Request the accession code \texttt{6hhr}.
+  Search Galaxy for the \textbf{Get PDB} tool. Request the accession code \texttt{6hhr}.
 \item
   Check that the datatype is correct (PDB file).
 \end{enumerate}
-\end{abstract_box}
+\end{handson_box_colour}
+
 \subsection{Topology generation}\label{topology-generation}
 
 Now we have downloaded a PDB structure of the protein we wish to study, we will start parameterizing it for MD simulation.
@@ -404,26 +403,22 @@ attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
-The PDB file we start from only explicitly states atom type and
-position. Therefore, before beginning simulation, we need to calculate
+The PDB file we start from only explicitly states atom type (i.e. carbon, oxygen, and so on) and
+3D Cartesian coordinates of each atom. Therefore, before beginning simulation, we need to calculate
 the rest of the information contained within the topology file. There
-are a range of force fields which perform these calculations in slightly
-different ways.
+are a range of force fields to perform these calculations.
 
 % perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
-
-Parameterization needs to be done separately for the ligand and protein.
-Therefore, the first step is to separate the PDB file into two sets of
-coordinates - one for the ligand and one for the protein.
 
 \subsubsection{Extract protein and ligand
 coordinates}\label{extract-protein-and-ligand-coordinates}
 
+Parameterization needs to be done separately for the ligand and protein.
+Therefore, the first step is to separate the PDB file into two sets of
+coordinates - one for the ligand and one for the protein. Here, we can make use of the simple text manipulation tools integrated into Galaxy.
 
-
-\begin{quote}
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description}
+\begin{handson_box_colour}
+\textbf{Hands-on: Separate protein and ligand coordinates}\label{hands-on-task-description}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -433,7 +428,7 @@ description}\label{hands-on-task-description}
   \begin{itemize}
   \tightlist
   \item
-    \emph{``Select lines from''}: `Hsp90 structure'\\
+    \emph{``Select lines from''}: `Hsp90 structure'
   \item
     \emph{``that''}: \texttt{Don\textquotesingle{}t\ Match}
   \item
@@ -447,7 +442,7 @@ description}\label{hands-on-task-description}
   \begin{itemize}
   \tightlist
   \item
-    \emph{``Select lines from''}: `Hsp90 structure'\\
+    \emph{``Select lines from''}: `Hsp90 structure'
   \item
     \emph{``that''}: \texttt{Match}
   \item
@@ -457,8 +452,9 @@ description}\label{hands-on-task-description}
   Rename output to `Ligand (PDB)'
 \end{enumerate}
 
+\end{handson_box_colour}
 
-\end{quote}
+Here, we simply filter the original PDB twice: once for lines which do not match \texttt{HETATM}, which returns a PDB file containing only protein, not ligand and solvent; and once for lines which match the ligand's identity code \texttt{AG5E}, which returns a PDB file containing only the ligand.
 
 \hypertarget{set-up-protein-topology}{%
 \subsubsection{Set up protein topology}\label{set-up-protein-topology}}
@@ -466,9 +462,8 @@ description}\label{hands-on-task-description}
 Firstly, we need to calculate the topology for the protein file. We will
 use the \textbf{GROMACS initial setup} tool.
 
-\begin{quote}
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-1}
+\begin{handson_box_colour}
+\textbf{Hands-on: Generate protein topology}\label{hands-on-task-description-1}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -488,9 +483,11 @@ description}\label{hands-on-task-description-1}
     \emph{``Generate detailed log''}: \texttt{Yes}
   \end{itemize}
 \end{enumerate}
+\end{handson_box_colour}
 
+A force field is essentially a function to calculate the potential energy of a system, based on various empirical parameters (for the atoms, bonds, charges, dihedral angles and so on). There are a number of families of forcefields; some of the most commonly used include CHARMM~\cite{Vanommeslaeghe2009}, AMBER~\cite{Maier2015}, GROMOS~\cite{reif2012} and OpenFF~\cite{Mobley2018}. We will use \texttt{ff14SB} which is the main Amber forcefield for protein modelling.
 
-\end{quote}
+A wide range of models exist for modeling water. Here we are using the common TIP3P model, which is an example of a 'three-site model' - so-called because the molecule is modeled using three points, corresponding to the three atoms of water. (Four- and five-site models include additional 'dummy atoms' representing the negative charges of the lone pairs of the oxygen atom).
 
 The tool produces four outputs: a GRO file (containing the coordinates
 of the protein), a TOP file (containing other information, including on
@@ -498,8 +495,7 @@ charges, masses, bonds and angles), an ITP file (which will be used to
 restrain the protein position in the equilibration step later on), and a
 log for the tool.
 
-Please note all GROMACS tools output a log. Generally, you only need to
-look at this when a job fails. It provides useful information for
+Please note all GROMACS tools output a log. It provides useful information for
 debugging if we encounter any problems.
 
 \subsubsection{Generate a topology for the
@@ -510,9 +506,8 @@ tool. This provides a convenient interface to the AmberTools suite and
 allows us to easily create the ligand topology in the format required by
 GROMACS.
 
-\begin{quote}
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-2}
+\begin{handson_box_colour}
+\textbf{Hands-on: Generate ligand topology}\label{hands-on-task-description-2}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -531,13 +526,15 @@ description}\label{hands-on-task-description-2}
     \emph{``Multiplicity''}: \texttt{1}
   \item
     \emph{``Force field to use for parameterization''}:
-    \texttt{AMBER14SB}
+    \texttt{gaff}
   \item
     \emph{``Save GRO file?''}: \texttt{Yes}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
+
+Here, we use GAFF (general AMBER force field), which is a generalized AMBER force field which can be applied to almost any small organic molecule, not just macromolecules such as proteins.
 
 \subsection{Solvation and energy
 minimization}\label{solvation-and-energy-minimization}
@@ -549,85 +546,35 @@ minimization step.
 \subsubsection{Combine topology and GRO
 files}\label{combine-topology-and-gro-files}
 
-\begin{quote}
-\subsubsection{Hands-on: Combine GRO
-files}\label{hands-on-combine-gro-files}
+While we have separate topology and structure files for both protein and ligand, we need to combine them into a single set of files to continue with the simulation setup. A dedicated Galaxy tool is provided for this, using the Python library ParmEd~\cite{Swails2016}.
+
+\begin{handson_box_colour}
+\textbf{Hands-on: Combine GRO and topology files}\label{hands-on-task-description-2}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  On the \texttt{Structure\ file\ (GRO\ format)} created by the
-  \textbf{acpype} tool,click on the \texttt{Visualize\ this\ data} icon.
-  Select \texttt{Editor} to open the file using the text editor
-  integrated into Galaxy. Select all the lines starting with
-  \texttt{1\ GSE} and copy your selection.
-\item
-  Open the Protein GRO file by clicking on the
-  \texttt{Visualize\ this\ data} button on the dataset.
-\item
-  Paste the lines from the ligand GRO file just before the last line.
-\item
-  If you scroll back to the top, you will see that the total number of
-  atoms in the system is given in the second line (\texttt{3280}). You
-  have just added 21 new atoms, so increase the value by 21 to
-  \texttt{3301}.
-\item
-  Click \texttt{Export} to save your changes as a new dataset. Make sure
-  the datatype of the new file is still \texttt{GRO}. Rename to
-  \texttt{System\ GRO\ file}.
+  \textbf{Merge GROMACS topologies} with the following
+  parameters:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{``Protein topology (TOP) file''}: \texttt{TOP} file created by the \textbf{GROMACS initial setup tool}
+  \item
+    \emph{``Ligand topology (TOP or ITP) file''}: \texttt{Topology} file created by the \textbf{acpype}
+  \item
+    \emph{``Protein structure (GRO) file''}: \texttt{GRO} file created by the \textbf{GROMACS initial setup tool}
+  \item
+    \emph{``Ligand structure (GRO) file''}: \texttt{Structure file (GRO format)} file created by the \textbf{acpype}
+
+  \end{itemize}
 \end{enumerate}
-\end{quote}
 
-\begin{quote}
-\subsubsection{Hands-on: Combine topology
-files}\label{hands-on-combine-topology-files}
+\end{handson_box_colour}
 
-\begin{enumerate}
-\def\labelenumi{\arabic{enumi}.}
-\tightlist
-\item
-  On the ligand \texttt{Topology} created by the \textbf{acpype} tool,
-  right-click on the \texttt{Visualize\ this\ data} icon and open the
-  link in a new tab. Select the first section in the file, starting with
-  \texttt{{[}\ atomtypes\ {]}}, and copy the selection.
-\item
-  Returning to the first tab, open the protein TOP file using the text
-  editor integrated into Galaxy by clicking on the
-  \texttt{Visualize\ this\ data} button on the dataset.
-\item
-  Paste the lines from the ligand ITP file near to the top of the file,
-  just after the line \texttt{\#include\ "amber99sb.ff/forcefield.itp"}.
-\item
-  Go back to the ligand ITP file and select the rest of the file (from
-  \texttt{{[}\ moleculetypes\ {]}}) onwards. Copy the selection.
-\item
-  In the protein TOP file, paste the selection near to the bottom of the
-  file, before the line \texttt{;\ Include\ water\ topology} (and just
-  after the position restraint file). Notice that the
-  \texttt{{[}\ moleculetype\ {]}} section you just copied starts with
-  \texttt{base} - this is the name acpype has given to the ligand. Feel
-  free to change this to whatever you prefer - \texttt{ligand}, or
-  \texttt{GSE}.
-\item
-  Finally, we need to state in the topology that we have included a new
-  kind of molecule. Go to the final section
-  (\texttt{{[}\ molecules\ {]}}) and add a new line \texttt{base} (or
-  whatever name you gave the ligand in step 5), with a 1 in the
-  \texttt{\#mols} column.
-\item
-  Click \texttt{Export} to save your changes as a new dataset. Make sure
-  the datatype of the new file is still \texttt{TOP}. Rename to
-  \texttt{System\ topology}.
-\end{enumerate}
-\end{quote}
-
-If this procedure was too complicated, you can download the combined
-files here: LINK. However, you will find it useful to understand the
-information contained within topology files and learn how to make
-changes to it.
-
-% needs updating with the new tool
+We now have a single GRO and TOP file, unifying the protein-ligand complex structure and topology.
 
 \subsubsection{\texorpdfstring{Create the simulation box with
 \textbf{GROMACS structure
@@ -637,10 +584,10 @@ The next step, once combined coordinate (GRO) and topology (TOP) files
 have been created, is to create a simulation box in which the system is
 situated.
 
-\begin{quote}
+\begin{handson_box_colour}
+
 \hypertarget{hands-on-task-description-3}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-3}}
+\textbf{Hands-on: Create simulation box}\label{hands-on-task-description-3}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -669,16 +616,18 @@ description}\label{hands-on-task-description-3}}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose: we select triclinic, as it provides the most efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent. 
+
+\end{handson_box_colour}
 
 \subsubsection{Solvation}\label{solvation}
 The next step is solvation of the newly created simulation box. Note
 that the system is charged (depending on the pH) - the solvation tool
-also adds sodium or chloride ions as required to neutralise this.
+also adds sodium or chloride ions (replacing existing water molecules) as required to neutralize this.
 
-\begin{quote}
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-4}
+\begin{handson_box_colour}
+
+\textbf{Hands-on: Solvation}\label{hands-on-task-description-4}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -686,7 +635,6 @@ description}\label{hands-on-task-description-4}
 \item
   \textbf{GROMACS solvation and adding ions} with the following
   parameters:
-
   \begin{itemize}
   \tightlist
   \item
@@ -699,16 +647,16 @@ description}\label{hands-on-task-description-4}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
 
 \subsubsection{Energy minimization}\label{energy-minimization}
 
 The next step is energy minimization, which can be carried out using the
-\textbf{GROMACS energy minimization} tool.
+\textbf{GROMACS energy minimization} tool. The purpose of energy minimization is to relax the structure, removing any steric clashes or unusual geometry which would artificially raise the energy of the system.
 
-\begin{quote}
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-5}
+\begin{handson_box_colour}
+
+\textbf{Hands-on: Energy minimization}\label{hands-on-task-description-5}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -742,17 +690,18 @@ description}\label{hands-on-task-description-5}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
+
 
 \subsection{Equilibration}\label{equilibration}
 
-We now carry out equilibration in two stages: NVT and NPT. This is
-discussed at greater length in the basic GROMACS tutorial. Equilibration
-requires restraining the protein structure - we use the ITP file
-produced by the initial setup tool for this.
+At this point equilibration of the solvent around the solute (i.e. the protein) is necessary. This is performed in two stages: equilibration under an NVT ensemble, followed by an NPT ensemble. Use of the NVT ensemble entails maintaining constant number of particles, volume and temperature, while the NPT ensemble maintains constant number of particles, pressure and temperature. (The NVT ensemble is also known as the isothermal-isochoric ensemble, while the NPT ensemble is also known as the isothermal-isobaric ensemble).
 
-\begin{quote}
-\subsubsection{Hands-on: NVT
+For equilibration, the protein must be held in place while the solvent is allowed to move freely around it. This is achieved using the position restraint file (ITP) we created in system setup. When we specify this restraint, protein movement is not totally forbidden, but is energetically punished.
+
+\begin{handson_box_colour}
+
+\textbf{Hands-on: NVT
 equilibration}\label{hands-on-nvt-equilibration}
 
 \begin{enumerate}
@@ -821,7 +770,7 @@ equilibration}\label{hands-on-nvt-equilibration}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
 
 Having stabilized the temperature of the system with NVT equilibration,
 we also need to stabilize the pressure of the system. We therefore
@@ -832,8 +781,9 @@ Note that we can continue where the last simulation left off (with new
 parameters) by using the checkpoint (CPT) file saved at the end of the
 NVT simulation.
 
-\begin{quote}
-\subsubsection{Hands-on: NPT
+\begin{handson_box_colour}
+
+\textbf{Hands-on: NPT
 equilibration}\label{hands-on-npt-equilibration}
 
 \begin{enumerate}
@@ -907,7 +857,8 @@ equilibration}\label{hands-on-npt-equilibration}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
+
 
 \subsection{Main simulation}\label{main-simulation}
 
@@ -915,9 +866,10 @@ We can now remove the restraints and continue with the simulation. The
 simulation will run for 1 million steps, with a step size of 1 fs, so
 wil have a total length of 1 ns.
 
-\begin{quote}
+\begin{handson_box_colour}
+
 \hypertarget{hands-on-task-description-6}{%
-\subsubsection{Hands-on: Task
+\textbf{Hands-on: Task
 description}\label{hands-on-task-description-6}}
 
 \begin{enumerate}
@@ -985,7 +937,7 @@ description}\label{hands-on-task-description-6}}
   \end{itemize}
 \end{enumerate}
 
-\end{quote}
+\end{handson_box_colour}
 
 \hypertarget{analysis}{%
 \section*{Analysis}\label{analysis}}
@@ -1009,9 +961,9 @@ To check the stability and conformation of the protein and ligand through the co
 tools}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
 Convert the structural coordinates of the system in GRO format into PDB
-format. This file will be used by most analysis tools as a starting structure.
+format. This file will be used by most analysis tools as a starting structure. This tool can also be used to do initial setup for GROMACS simulations and convert from PDB to GRO format
 
-\begin{handson_box_colour}
+\begin{handson_box_colour}{Convert structural coordinates}
 
 
 \begin{enumerate}
@@ -1038,14 +990,14 @@ format. This file will be used by most analysis tools as a starting structure.
 format}\label{convert-trajectory-to-dcd-format}}
 
 Convert from XTC to DCD format. A number of the analysis tools being
-used have been built to analyse trajectories in CHARMM's DCD format.
+used have been built to analyse trajectories in CHARMM's DCD format. This tool can also be used to interconvert between several other trajectory formats. A downside is that data is being duplicated and utilising further storage space on the Galaxy server.
 
-\begin{handson_box_colour}
+\begin{handson_box_colour}{Convert trajectory format}
 
 
-\hypertarget{hands-on-task-description-8}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-8}}
+%\hypertarget{hands-on-task-description-8}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-8}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1069,12 +1021,11 @@ RMSD is a standard measure of structural distance between coordinate
 sets that measures the average distance between a group of atoms. The
 RMSD of the C$\alpha$ atoms of the protein backbone is calculated here and
 is a measure of how much the protein conformation has changed between different time
-points in the trajectory.
+points in the trajectory. An RMSD on C$\alpha$ atoms will select all protein C$\alpha$ atoms, where the ligans is also a protein consider a different selection. 
 
-\begin{handson_box_colour}
-\hypertarget{hands-on-task-description-9}{%
-\subsubsection*{Hands-on: Task
-description}\label{hands-on-task-description-9}}
+\begin{handson_box_colour}{RMSD Analysis: protein}
+%\hypertarget{hands-on-task-description-9}{%
+%\subsubsection*{Hands-on: Task description}\label{hands-on-task-description-9}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1088,16 +1039,12 @@ description}\label{hands-on-task-description-9}}
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
+\end{handson_box_colour}
 
-
-\hypertarget{hands-on-task-description-10}{%
-\subsubsection*{Hands-on: Task
-description}\label{hands-on-task-description-10}}
-
+%\hypertarget{hands-on-task-description-10}{%
+%\subsubsection*{Hands-on: Task description}\label{hands-on-task-description-10}}
+\begin{handson_box_colour}{RMSD Analysis: ligand}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
@@ -1116,16 +1063,13 @@ description}\label{hands-on-task-description-10}}
     \emph{``Select domains''}: \texttt{Ligand}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
+\end{handson_box_colour}
 
-
-\hypertarget{hands-on-task-description-11}{%
-\subsubsection*{Hands-on: Task
-description}\label{hands-on-task-description-11}}
-
+%\hypertarget{hands-on-task-description-11}{%
+%\subsubsection*{Hands-on: Task
+%description}\label{hands-on-task-description-11}}
+\begin{handson_box_colour}{RMSD Analysis: ligand using Residue ID}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
@@ -1150,9 +1094,6 @@ description}\label{hands-on-task-description-11}}
     \end{itemize}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 
@@ -1165,12 +1106,12 @@ description}\label{hands-on-task-description-11}}
 
 The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. Here, we consider how the fluctuation of particular amino acids in the protein. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectrocopy.
 
-\begin{handson_box_colour}
+\begin{handson_box_colour}{RMSF Analysis}
 
 
-\hypertarget{hands-on-task-description-12}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-12}}
+%\hypertarget{hands-on-task-description-12}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-12}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1190,9 +1131,6 @@ description}\label{hands-on-task-description-12}}
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 
@@ -1208,11 +1146,11 @@ components which are linearly independent (or uncorrelated). Here we
 will calculate the PCA, visualize it and also calculate the cosine
 content.
 
-\begin{handson_box_colour}
+\begin{handson_box_colour}{PCA Analysis with BIO3D}
 
-\hypertarget{hands-on-task-description-13}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-13}}
+%\hypertarget{hands-on-task-description-13}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-13}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1232,16 +1170,13 @@ description}\label{hands-on-task-description-13}}
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
+\end{handson_box_colour}
 
-
-\hypertarget{hands-on-task-description-14}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-14}}
-
+%\hypertarget{hands-on-task-description-14}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-14}}
+\begin{handson_box_colour}{Cosine content calculation}
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
@@ -1258,18 +1193,15 @@ description}\label{hands-on-task-description-14}}
     structure configuration} )
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
 
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 \end{handson_box_colour}
 
-\begin{handson_box_colour}
-
-\hypertarget{hands-on-task-description-15}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-15}}
+\begin{handson_box_colour}{PCA visualisation}
+%\hypertarget{hands-on-task-description-15}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-15}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1289,9 +1221,6 @@ description}\label{hands-on-task-description-15}}
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 
@@ -1304,10 +1233,10 @@ description}\label{hands-on-task-description-15}}
 Hydrogen bonding interactions contribute to binding and are worth
 investigating, in particular persistent hydrogen bonds.
 
-\begin{handson_box_colour}
-\hypertarget{hands-on-task-description-16}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-16}}
+\begin{handson_box_colour}{Hydrogen bond analyis}
+%\hypertarget{hands-on-task-description-16}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-16}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1330,11 +1259,8 @@ description}\label{hands-on-task-description-16}}
     \emph{``Selection 2''}: \texttt{resname\ UNL}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
 
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
-
 
 \end{handson_box_colour}
 
@@ -1344,7 +1270,7 @@ description}\label{hands-on-task-description-16}}
 energy}\label{optional-estimate-the-binding-free-energy}}
 
 We can estimate the binding free energy between a ligand and a receptor
-using Molecular Mechanics Poisson-Boltzman Surface Area (MMPBSA). For
+using Molecular Mechanics Poisson-Boltzman or General Born Surface Area (MMPBSA or MMGBSA). For
 the simplest form of calculation, a Single Trajectory Estimate, a
 simulation of the complex in water is run, this was done with GROMACS
 previously. The trajectory of this complex is used to estimate the
@@ -1352,7 +1278,7 @@ MMPBSA or MMGBSA depending on the options chosen. A General Born (GB)
 calculation is recommended here as it completes in reasonable time.
 
 \hypertarget{converting-parameters}{%
-\subsubsection{Converting parameters}\label{converting-parameters}}
+\subsubsection*{Converting parameters}\label{converting-parameters}}
 
 The MMPBSA tool supports the AMBER topology format only. To convert from GROMACS
 '.top' and '.gro' to AMBER topologies, use the following tool which uses
@@ -1360,13 +1286,11 @@ AMBER's parmed to carry out the conversion. The result will be 4 AMBER'.prmtop'
 files which are required for the binding free energy estimate
 calculation.
 
+\begin{handson_box_colour}{Parameter Conversion}
 
-\begin{handson_box_colour}
-
-
-\hypertarget{hands-on-task-description-17}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-17}}
+%\hypertarget{hands-on-task-description-17}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-17}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1394,20 +1318,16 @@ description}\label{hands-on-task-description-17}}
     \emph{``Complex selection''}: \texttt{:NA,CL,SOL}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions}
-
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 \end{handson_box_colour}
 
 \hypertarget{binding-free-energy-estimate}{%
-\subsection{Binding free energy
-estimate}\label{binding-free-energy-estimate}}
+\subsection*{Binding free energy estimate}\label{binding-free-energy-estimate}}
 
-\begin{handson_box_colour}
-\hypertarget{hands-on-task-description-18}{%
-\subsubsection{Hands-on: Task
-description}\label{hands-on-task-description-18}}
+\begin{handson_box_colour}{Calculate MMGBSA}
+%\hypertarget{hands-on-task-description-18}{%
+%\subsubsection{Hands-on: Task
+%description}\label{hands-on-task-description-18}}
 
 \begin{enumerate}
 \def\labelenumi{\arabic{enumi}.}
@@ -1419,7 +1339,6 @@ description}\label{hands-on-task-description-18}}
   \tightlist
   \item
     In \emph{``Input''}:
-
     \begin{itemize}
     \tightlist
     \item
@@ -1435,21 +1354,19 @@ description}\label{hands-on-task-description-18}}
     \end{itemize}
   \item
     In \emph{``General parameters''}:
-
     \begin{itemize}
-    %\tightlist
-    \item
+    \tightlist
+    \item      
       \emph{``Final frame to analyse''}: \texttt{2000}
-    \item
+    \item      
       \emph{``interval between frames analysed''}: \texttt{5}
-    \item
+    \item      
       \emph{``quasi-harmonic entropy calculation''}: \texttt{No}
     \item
       \emph{``Strip mask''}: \texttt{:NA:SOL:CL}
     \end{itemize}
   \item
     In \emph{``Details of calculation and parameters''}:
-
     \begin{itemize}
     \tightlist
     \item
@@ -1461,9 +1378,7 @@ description}\label{hands-on-task-description-18}}
     \end{itemize}
   \end{itemize}
 
-  \textbf{\emph{TODO}}: \emph{Check parameter descriptions - note entropy was set to Yes and this is incorrect.}
 
-  \textbf{\emph{TODO}}: \emph{Consider adding a comment or tip box}
 \end{enumerate}
 
 
@@ -1506,10 +1421,11 @@ The RMSD timeseries for the protein shows a thermally stable and equilibrated st
 an average RMSD between 1 and 1.3. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}.
 
 \begin{figure}[h!]
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
   \caption{\csentence{RMSD for protein.}
       RMSD time series and histogram for the protein.}
-\label{fig:rmsdprotein}
-      \end{figure}
+  \label{fig:rmsdprotein}
+\end{figure}
 %\includegraphics{images/htmd_analysis_rmsd1_series.png}
 %\includegraphics{images/htmd_analysis_rmsd1_histo.png}
 
@@ -1520,27 +1436,30 @@ In this case the RMSD seems to stabilise at 1.0 and then transitions back to 0.5
 poses were viewed in VMD \cite{hump_vmd_1996} (see Figure \ref{fig:rmsdligand}).
 
 \begin{figure}[h!]
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_with_binding_merge}
   \caption{\csentence{RMSD for the ligand.}
       RMSD time series and histogram for the ligand, inset are images of the ligand conformation.}
-\label{fig:rmsdligand}
-      \end{figure}
+  \label{fig:rmsdligand}
+\end{figure}
 %\includegraphics{images/htmd_analysis_rmsd2_series.png}
 %\includegraphics{images/htmd_analysis_rmsd2_histo.png}
 %\includegraphics{images/htmd_analysis_bindingposes.png}
+
 
 \subsection*{RMSF}
 When considering the RMSF fluctuations greater than 1 Angstrom are worth
 considering. These are seen near residue position 50, 110 and 160. Very
 large fluctuations are seen for the final residues i.e.~the C-terminus.
-Thes are fairly common and no investigation is needed. The movement could be
-related to binding or other motions.
+These are fairly common and no investigation is needed. The movement could be
+related to binding or other motions, but is does correlate well with the most significant principal component determined by PCA.
 
 % possibly RMSF fig but not really needed
 \begin{figure}[h!]
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_pc1_rmsf}
   \caption{\csentence{RMSF for the protein.}
       RMSF}
 \label{fig:rmsf}
-      \end{figure}
+\end{figure}
 %\includegraphics{images/htmd_analysis_rmsf.png}
 
 \subsection*{PCA}
@@ -1548,8 +1467,7 @@ related to binding or other motions.
 The first principal component (PC1) is most important accounting for
 32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots). More
 information on PCA can be found in the
-\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D
-tutorial}. The RMSF is in good correlation with PC1.
+\href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D tutorial}. The RMSF is in good correlation with PC1.
 
 \begin{figure}[h!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
@@ -1576,16 +1494,6 @@ An MMGBSA calculation using a single trajectory yields an binding estimate of -1
 We provide an overview of ...
 
 
-
-\section*{Section title}
-Text for this section \ldots
-\subsection*{Sub-heading for section}
-Text for this sub-heading \ldots
-\subsubsection*{Sub-sub heading for section}
-Text for this sub-sub-heading \ldots
-\paragraph*{Sub-sub-sub heading for section}
-Text for this sub-sub-sub-heading \ldots
-In this section we examine the growth rate of the mean of $Z_0$, $Z_1$ and $Z_2$. In
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1658,17 +1566,7 @@ In this section we examine the growth rate of the mean of $Z_0$, $Z_1$ and $Z_2$
 %%
 %% Do not use \listoffigures as most will included as separate files
 
-\section*{Figures}
-  \begin{figure}[h!]
-  \caption{\csentence{Sample figure title.}
-      A short description of the figure content
-      should go here.}
-      \end{figure}
 
-\begin{figure}[h!]
-  \caption{\csentence{Sample figure title.}
-      Figure legend text.}
-      \end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

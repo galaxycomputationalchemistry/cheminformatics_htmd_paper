@@ -307,7 +307,7 @@ ligands for the Hsp90 protein.
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
 
-Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, KNIME or CWL; all of which provide molecular dynamics tools/nodes.
+Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, which provide a selection of tools for molecular dynamics simulation and analysis.
 
 This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
 concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading.
@@ -356,7 +356,7 @@ anti-tumor agents.
 \begin{figure}[h!]
   \includegraphics[width=0.4\textwidth]{hsp90lig}
     \caption{\csentence{Hsp90 cartoon view.}
-    Hsp90 cartoon rendered with ligands in active site}
+    Hsp90 cartoon with ligands in active site, rendered using the Galaxy NGL plugin~\cite{Rose2018ngl}}
 \label{fig:Hsp90}
  \end{figure}
 
@@ -401,7 +401,7 @@ and trajectory (XTC and TRR) files.
 The PDB file we start from only explicitly states atom type (i.e. carbon, oxygen, and so on) and
 3D Cartesian coordinates of each atom; additionally, it will usually not include hydrogen atoms. Therefore, before beginning simulation, we need to calculate
 the rest of the information contained within the topology file. There
-are a range of force fields to perform these calculations (for a recent, accessible overview see ~\cite{Lemkul2020}.
+are a range of force fields to perform these calculations (for a recent, accessible overview see ~\cite{Lemkul2020}).
 
 % perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
 
@@ -490,7 +490,7 @@ charges, masses, bonds and angles), an ITP file (which will be used to
 restrain the protein position in the equilibration step later on), and a
 log for the tool.
 
-Please note all GROMACS tools output a log. It provides useful information for
+Please note all the GROMACS tools provided in Galaxy output a log. It provides useful information for
 debugging if we encounter any problems.
 
 \subsection*{Generate a topology for the
@@ -540,7 +540,7 @@ Having generated topologies, we now need to combine them, define the box
 which contains the system, add solvent and ions, and perform an energy
 minimization step.
 
-\subsection*{Combine topology and GRO
+\subsubsection*{Combine topology and GRO
 files}\label{combine-topology-and-gro-files}
 
 While we have separate topology and structure files for both protein and ligand, we need to combine them into a single set of files to continue with the simulation setup. A dedicated Galaxy tool is provided for this, using the Python library ParmEd~\cite{Swails2016}.
@@ -693,7 +693,7 @@ The EM tolerance here refers to the maximum force which will be allowed in a min
 
 \subsection*{Equilibration}\label{equilibration}
 
-At this point equilibration of the solvent around the solute (i.e. the protein) is necessary. This is performed in two stages: equilibration under an NVT ensemble, followed by an NPT ensemble. Use of the NVT ensemble entails maintaining constant number of particles, volume and temperature, while the NPT ensemble maintains constant number of particles, pressure and temperature (The NVT ensemble is also known as the isothermal-isochoric ensemble, while the NPT ensemble is also known as the isothermal-isobaric ensemble).
+At this point equilibration of the solvent around the solute (i.e. the protein) is necessary. This is performed in two stages: equilibration under an NVT (or isothermal-isochoric ensemble) ensemble, followed by an NPT (or isothermal-isobaric ensemble) ensemble. Use of the NVT ensemble entails maintaining constant number of particles, volume and temperature, while the NPT ensemble maintains constant number of particles, pressure and temperature.
 
 For equilibration, the protein must be held in place while the solvent is allowed to move freely around it. This is achieved using the position restraint file (ITP) we created in system setup. When we specify this restraint, protein movement is not totally forbidden, but is energetically punished.
 
@@ -858,11 +858,9 @@ equilibration}
 \end{handson_box_colour}
 
 
-\subsection*{Main simulation}\label{main-simulation}
+\subsection*{Production simulation}\label{production-simulation}
 
-We can now remove the restraints and continue with the simulation. The
-simulation will run for 1 million steps, with a step size of 1 fs, so
-will have a total length of 1 ns.
+We can now remove the restraints and continue with the production simulation. The simulation will run for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns.
 
 \begin{handson_box_colour}{Main simulation}
 
@@ -939,7 +937,7 @@ will have a total length of 1 ns.
 \hypertarget{optional-automating-high-throughput-calculations}{%
 \section*{High throughput methods}\label{optional-automating-high-throughput-calculations}}
 
-Where there are many protein-ligand systems to consider, a batch automation strategy is needed. Multiple manual set ups can be done in a single history but there are alternatives. Galaxy supports and provides training material for \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history-to-workflow/tutorial.html}{converting histories to workflows}, \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history/tutorial.html}{multiple histories}, using \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collections}, and the \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{Galaxy Application Programming Interface (API)}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via script, automate repetitive task, interact with external resources and create more complex workflows (which have repetition or branching).
+Where there are many protein-ligand systems to consider, a batch automation strategy is needed. Multiple manual set ups can be done in a single history but there are alternatives. Galaxy supports and provides training material for \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history-to-workflow/tutorial.html}{converting histories to workflows}, \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history/tutorial.html}{multiple histories}, using \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collections}, and the \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{Galaxy Application Programming Interface (API)}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
 
 \begin{handson_box_colour}{Example Galaxy API usage}
 TODO
@@ -1385,7 +1383,7 @@ calculation. Selections are provided to the tool in order to remove unneccesary 
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation length sufficient and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein then $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content is 0.084, indicating that sampling is most likely sufficient.
+After the completion of the simulation important questions are i) is the simulation length sufficient and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein then $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content is 0.084, which gives us some confidence sampling is sufficient.
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
@@ -1476,7 +1474,9 @@ After completing the tutorial, the user should be familiar at a basic level with
     Text for this section \ldots
 
 \section*{Acknowledgements}
-  Text for this section \ldots
+We thank Bérénice Batut for helpful comments and discussions. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy Team and ilifu teams, for their support. 
+
+Text for this section \ldots
   TODO: Include NRF funding and thanks to Galaxy EU and ilifu teams.
 The Galaxy server that was used for some calculations is in part funded by Collaborative Research Centre 992 Medical Epigenetics (DFG grant SFB 992/1 2012) and German Federal Ministry of Education and Research (BMBF grants 031 A538A/A538C RBC, 031L0101B/031L0101C de.NBI-epi, 031L0106 de.STAIR (de.NBI)).
 \section*{Data and material availability}

@@ -934,19 +934,6 @@ We can now remove the restraints and continue with the production simulation. Th
 
 \end{handson_box_colour}
 
-\hypertarget{optional-automating-high-throughput-calculations}{%
-\section*{High throughput methods}\label{optional-automating-high-throughput-calculations}}
-
-Where there are many protein-ligand systems to consider, a batch automation strategy is needed. Multiple manual set ups can be done in a single history but there are alternatives. Galaxy supports and provides training material for \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history-to-workflow/tutorial.html}{converting histories to workflows}, \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history/tutorial.html}{multiple histories}, using \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collections}, and the \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{Galaxy Application Programming Interface (API)}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
-
-\begin{handson_box_colour}{Example Galaxy API usage}
-TODO
-- Create a new history
-- import a PDB
-- import a ligand
-- run a tool or a short workflow
-\end{handson_box_colour}
-
 
 \hypertarget{analysis}{%
 \section*{Analysis Methods}\label{analysis}}
@@ -1450,6 +1437,50 @@ small, 0.20\%, the hydrogen bond is not present for most of the simulation
 
 An MMGBSA calculation using the single trajectory protocol yields a binding estimate of -19.62 kcal/mol (-82.09 kJ/mol) for this ligand. The negative value suggests the complex is thermodynamically stable, as we expect. Note that this value does not include the entropy contribution, but this is likely to be relatively small.
 
+\hypertarget{optional-automating-high-throughput-calculations}{%
+\section*{High throughput methods}\label{optional-automating-high-throughput-calculations}}
+
+Up until this step, Galaxy tools have been applied sequentially to datasets. This is useful to gain an understanding of the steps involved, but becomes tedious if the workflow needs to be run on multiple protein-ligand systems. Fortunately, Galaxy allows entire workflows to be executed with a single mouse-click, enabling straightforward high-throughput analyses.
+
+We will demonstrate the high-throughput capabilities of Galaxy by running the workflow detailed so far on a further three ligands.
+
+\begin{handson_box_colour}{High-throughput MD}
+%\textbf{Hands-on: Data upload}
+
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  Create a new history for running the high-throughput workflow.
+
+\item
+  Upload the SD-file containing the new ligand structures from Zenodo (LINK...) and rename it `Ligands (SDF)'
+\item
+  Import the workflow from \href{https://usegalaxy.eu/u/sbray/w/protein-ligand-htmd-sim}{the European} or the South African Galaxy server.
+\item
+  Run the imported workflow with the following parameters:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{``SDF file with (docked) ligands''}: `Ligands (SDF)' file.
+  \end{itemize}
+\item
+  Run the analysis workflow...
+\end{enumerate}
+\end{handson_box_colour}
+
+This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collection} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
+
+Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided \href{https://usegalaxy.eu/u/sbray/h/protein-ligand-docking-6hhr}{here}.
+
+\subsection*{Further information}
+
+Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history-to-workflow/tutorial.html}{converting histories to workflows}, \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history/tutorial.html}{multiple histories}, and the \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{Galaxy Application Programming Interface (API)}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
+
+TODO: maybe a short bioblend script?
+
+
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
 
@@ -1474,7 +1505,7 @@ After completing the tutorial, the user should be familiar at a basic level with
     Text for this section \ldots
 
 \section*{Acknowledgements}
-We thank Bérénice Batut for helpful comments and discussions. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy Team and ilifu teams, for their support. 
+We thank Bérénice Batut for helpful comments and discussions. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy and ilifu teams, for their support. 
 
 Text for this section \ldots
   TODO: Include NRF funding and thanks to Galaxy EU and ilifu teams.

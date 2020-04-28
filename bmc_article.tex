@@ -309,8 +309,8 @@ ligands for the Hsp90 protein.
 
 Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, which provide a selection of tools for molecular dynamics simulation and analysis.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
-concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
+concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
 
 The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015} engine), to analysis of the results.
 
@@ -348,10 +348,12 @@ Due to its vital biochemical role as a chaperone protein involved in
 facilitating the folding of many client proteins, Hsp90 is an attractive
 pharmaceutical target. In particular, as protein folding is a potential
 bottleneck to slow cellular reproduction and growth, blocking Hsp90
-function using inhibitors which bind tightly to the ATP binding site
+function using inhibitors which bind tightly to the ATP binding site of the NTD
 could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
 anti-tumor agents.
+
+In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
 
 \begin{figure}[h!]
   \includegraphics[width=0.4\textwidth]{hsp90lig}
@@ -1484,7 +1486,7 @@ TODO: maybe a short bioblend script?
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
 
-This tutorial provides an guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the pain from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary.
+This tutorial provides an guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the pain from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary. Apart from streamlining the process for existing MD users, this tutorial should also provide useful as a pedagogical guide for educating students or newcomers to the field.
 
 After completing the tutorial, the user should be familiar at a basic level with a range of MD analysis techniques, and understand the steps required for a typical MD simulation. Thus, they should be armed to apply these tools to their own problems.
 

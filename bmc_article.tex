@@ -161,7 +161,7 @@
 \author[ addressref={aff1},                   % id's of addresses, e.g. {aff1,aff2}
    noteref={n1},                        % id's of article notes, if any
    email={sbray1371@gmail.com}   % email address
-]{\inits{SAB}\fnm{Simon A} \snm{Bray}} \orcidicon{0000-0002-0621-6705}
+]{\inits{SAB}\fnm{Simon A.} \snm{Bray}} \orcidicon{0000-0002-0621-6705}
 \author[
    addressref={aff2},
    noteref={n1},
@@ -170,12 +170,12 @@
 \author[
    addressref={aff2},
    email={chris.barnett@uct.ac.za}
-]{\inits{CB}\fnm{Christopher B} \snm{Barnett}} \orcidicon{0000-0002-1467-5741}
+]{\inits{CBB}\fnm{Christopher B.} \snm{Barnett}} \orcidicon{0000-0002-1467-5741}
 \author[
    addressref={aff1},
-   corref={aff1},
-   email={gruening@informatik.uni-freiburg.de}
-]{\inits{BG}\fnm{Björn} \snm{Grüning}} \orcidicon{0000-0002-3079-6586}
+   corref={aff1,aff2},
+   email={gruening@informatik.uni-freiburg.de; chris.barnett@uct.ac.za}
+]{\inits{BAG}\fnm{Björn A.} \snm{Grüning}} \orcidicon{0000-0002-3079-6586}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -233,8 +233,7 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-This paper is a tutorial developed for the data analysis platform Galaxy. The
-Galaxy's concept makes high-throughput computational data analysis a
+This paper is a tutorial developed for the data analysis platform Galaxy. Galaxy's concept makes high-throughput computational data analysis a
 structured, reproducible and transparent process. In this tutorial we
 focus on 3 questions: How are protein-ligand systems parameterized for
 molecular dynamics simulation? What kind of analysis can be carried out
@@ -307,7 +306,7 @@ ligands for the Hsp90 protein.
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
 
-Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, which provide a selection of tools for molecular dynamics simulation and analysis.
+Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, which provides a selection of tools for molecular dynamics simulation and analysis.
 
 This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
 concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
@@ -317,7 +316,7 @@ The aim of this tutorial is to guide the user through the various steps of a mol
 The entire analysis described in this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
 (\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/}).
 
-The tutorial presented in this article has been developed by the Galaxy Training Network \cite{Batut2018} and its most up-to-date version is available online on the \href{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html}{Galaxy Training Materials} website.
+The tutorial presented in this article has been developed by the Galaxy Training Network \cite{Batut2018} and its most up-to-date version is available online on the Galaxy Training Materials website\cite{gtn_comp}.
 
 
 \subsection*{What is high-throughput molecular
@@ -342,7 +341,7 @@ hundred proteins, include nuclear steroid hormone receptors and protein
 kinases.~\cite{Pearl2006} The mechanism by which Hsp90 acts varies between clients, as
 does the client binding site; the process is dependent on
 post-translational modifications of Hsp90 and the identity of
-co-chaperones which bind and regulate the conformational cycle.
+co-chaperones which bind and regulate the conformational cycle.~\cite{Schopf2017}
 
 Due to its vital biochemical role as a chaperone protein involved in
 facilitating the folding of many client proteins, Hsp90 is an attractive
@@ -351,11 +350,11 @@ bottleneck to slow cellular reproduction and growth, blocking Hsp90
 function using inhibitors which bind tightly to the ATP binding site of the NTD
 could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
-anti-tumor agents.
+anti-tumor agents.~\cite{Stebbins1997}~\cite{Hermane2019}
 
-In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
+In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{hsp90lig}
     \caption{\csentence{Hsp90 cartoon view.}
     Hsp90 cartoon with ligands in active site, rendered using the Galaxy NGL plugin~\cite{Rose2018ngl}}
@@ -1376,9 +1375,9 @@ After the completion of the simulation important questions are i) is the simulat
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
-an average RMSD between 1{\AA} and 1.3{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}.
+an average RMSD between 1.0{\AA} and 1.3{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein} and note these graphs are automatically created as part of the tools outputs in Galaxy. 
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
   \caption{\csentence{RMSD for protein.}
       RMSD time series and histogram for the protein.}
@@ -1392,10 +1391,10 @@ Calculating the RMSD of the ligand is necessary to check if it is stable in the 
 
 In this case the RMSD seems to stabilise at 1.0{\AA} and then transitions back to 0.5{\AA}. This is more clearly seen in the histogram. There is a bimodal distribution with centres at 0.3{\AA} and 1.0{\AA} which both have significant populations. There are two binding poses which can be visually assessed using VMD\cite{hump_vmd_1996}, see Figure \ref{fig:rmsdligand}.
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_with_binding_merge}
   \caption{\csentence{RMSD for the ligand.}
-      RMSD time series and histogram for the ligand. The two docking poses seen for the resorcinol ligand in Hsp90.}
+      RMSD time series and histogram for the ligand. The two docking poses seen for the resorcinol ligand in Hsp90, rendered using VMD~\cite{hump_vmd_1996}}
   \label{fig:rmsdligand}
 \end{figure}
 %\includegraphics{images/htmd_analysis_rmsd2_series.png}
@@ -1404,10 +1403,10 @@ In this case the RMSD seems to stabilise at 1.0{\AA} and then transitions back t
 
 
 \subsection*{RMSF}
-When considering the RMSF, fluctuations greater than 1 {\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus, this is fairly common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions, but is does correlate well with the most significant principal component determined by PCA (not shown here).
+When considering the RMSF, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus, this is fairly common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions, but is does correlate well with the most significant principal component determined by PCA (not shown here).
 
 % possibly RMSF fig but not really needed
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsf}
   \caption{\csentence{RMSF for the protein.}
       RMSF(\AA) vs the residue position. Large fluctuations occur for residue positions 50, 110 and 160. }
@@ -1418,10 +1417,9 @@ When considering the RMSF, fluctuations greater than 1 {\AA} are of interest, fo
 \subsection*{PCA}
 
 The first principal component (PC1) is most important and it accounts for
-32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots in Figure \ref{fig:pca}. More
-information on PCA can be found in the \href{http://thegrantlab.org/bio3d/tutorials/trajectory-analysis}{BIO3D tutorial}. The RMSF is in good correlation with PC1 (not shown here).
+32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots in Figure \ref{fig:pca}. The RMSF is in good correlation with PC1 (not shown here).
 
-\begin{figure}[h!]
+\begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
   \caption{\csentence{Principal Component Analysis.}
       PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an Eigenvalue rank plot. }
@@ -1434,7 +1432,7 @@ information on PCA can be found in the \href{http://thegrantlab.org/bio3d/tutori
 The active site of this protein is quite hydrophobic. A single hydrogen
 bond is seen between the ligand and Hsp90, this is between Threonine 184
 and the ligand. This hydrogen bond is not persistent, the occupancy is
-small, 0.20\%, the hydrogen bond is not present for most of the simulation
+small, 0.2\%, the hydrogen bond is not present for most of the simulation
 (according to the criteria for hydrogen bonding).
 
 An MMGBSA calculation using the single trajectory protocol yields a binding estimate of -19.62 kcal/mol (-82.09 kJ/mol) for this ligand. The negative value suggests the complex is thermodynamically stable, as we expect. Note that this value does not include the entropy contribution, but this is likely to be relatively small.
@@ -1458,7 +1456,7 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \item
   Upload the SD-file containing the new ligand structures from Zenodo (LINK...) and rename it `Ligands (SDF)'
 \item
-  Import the workflow from \href{https://usegalaxy.eu/u/sbray/w/protein-ligand-htmd-sim}{the European} or the South African Galaxy server.
+  Import the workflow from the European\cite{eu_htmd_simulation_workflow} or the South African Galaxy server.
 \item
   Run the imported workflow with the following parameters:
 
@@ -1472,13 +1470,13 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \end{enumerate}
 \end{handson_box_colour}
 
-This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's \href{https://galaxyproject.github.io/training-material/topics/galaxy-data-manipulation/tutorials/collections/tutorial.html}{collection} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
+This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's collection\cite{gtn_collections} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
 
-Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided \href{https://usegalaxy.eu/u/sbray/h/protein-ligand-docking-6hhr}{here}.
+Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided here\cite{eu_6hhr}.
 
 \subsection*{Further information}
 
-Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history-to-workflow/tutorial.html}{converting histories to workflows}, \href{https://galaxyproject.github.io/training-material/topics/galaxy-ui/tutorials/history/tutorial.html}{multiple histories}, and the \href{https://training.galaxyproject.org/training-material/topics/dev/tutorials/bioblend-api/slides.html}{Galaxy Application Programming Interface (API)}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
+Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows\cite{gtn_toworkflow}, multiple histories\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
 
 TODO: maybe a short bioblend script?
 
@@ -1504,14 +1502,13 @@ After completing the tutorial, the user should be familiar at a basic level with
   The authors declare that they have no competing interests.
 
 \section*{Author's contributions}
-    Text for this section \ldots
+All authors contributed to writing Galaxy tools, creating workflows, writing training material, and writing the paper.
 
 \section*{Acknowledgements}
 We thank Bérénice Batut for helpful comments and discussions. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy and ilifu teams, for their support. 
-
-Text for this section \ldots
-  TODO: Include NRF funding and thanks to Galaxy EU and ilifu teams.
+This publication is based on research that has been supported in part by the University of Cape Town’s Research Committee (URC) and by the National Research Foundation of South Africa (Grant Numbers 115215 and 116362).
 The Galaxy server that was used for some calculations is in part funded by Collaborative Research Centre 992 Medical Epigenetics (DFG grant SFB 992/1 2012) and German Federal Ministry of Education and Research (BMBF grants 031 A538A/A538C RBC, 031L0101B/031L0101C de.NBI-epi, 031L0106 de.STAIR (de.NBI)).
+
 \section*{Data and material availability}
   Data and materials are available on GitHub:
   TODO\ldots

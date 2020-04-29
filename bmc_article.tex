@@ -306,7 +306,7 @@ ligands for the Hsp90 protein.
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
 
-Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system~\cite{senapathi_biomolecular_2019} such as Galaxy, which provides a selection of tools for molecular dynamics simulation and analysis.
+Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as included in Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis.
 
 This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
 concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
@@ -352,7 +352,7 @@ could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
 anti-tumor agents.~\cite{Stebbins1997}~\cite{Hermane2019}
 
-In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
+In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238.~\cite{ligand_resorcinol} As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{hsp90lig}
@@ -1126,8 +1126,8 @@ The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents
 Principal component analysis (PCA) converts a set of correlated
 observations (movement of selected atoms in protein) to a set of principal
 components which are linearly independent (or uncorrelated). Here several related tools are used. 
-The PCA analysis tool calculates the PCA in order to determine the relationship between statistically meaningful conformations (major global motions) sampled during the trajectory. The C$\alpha$ carbons of the protein backbone are again a good selection for this purpose.  Outputs include the PCA raw data and figures of the relevant principal components (for example see Figure \ref{fig:pca}). 
-Having discovered the principal components usually these are visualised. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD\cite{hump_vmd_1996} or NGL viewer\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation length is insufficient. While close to 0 is not enough to determine that this is sufficient. 
+The PCA analysis tool calculates the PCA in order to determine the relationship between statistically meaningful conformations (major global motions) sampled during the trajectory. The C$\alpha$ carbons of the protein backbone are again a good selection for this purpose.  Outputs include the PCA raw data and figures of the relevant principal components as well as an eigenvalue rank plot (see Figure \ref{fig:pca}) which is used to visualize the proportion of variance due to each principal component (remembering that the PC's are ranked eigenvectors based on the variance). 
+Having discovered the principal components usually these are visualised. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD\cite{hump_vmd_1996} or NGL viewer\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation is not converged, thus the simulation length is insufficient and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
 
 
 \begin{handson_box_colour}{PCA Analysis with BIO3D}
@@ -1371,7 +1371,7 @@ calculation. Selections are provided to the tool in order to remove unneccesary 
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation length sufficient and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein then $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content is 0.084, which gives us some confidence sampling is sufficient.
+After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein then $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.084, this gives us some confidence that the simulation is converged and sampling is sufficient.
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
@@ -1405,6 +1405,7 @@ In this case the RMSD seems to stabilise at 1.0{\AA} and then transitions back t
 \subsection*{RMSF}
 When considering the RMSF, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus, this is fairly common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions, but is does correlate well with the most significant principal component determined by PCA (not shown here).
 
+
 % possibly RMSF fig but not really needed
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsf}
@@ -1416,13 +1417,13 @@ When considering the RMSF, fluctuations greater than 1.0{\AA} are of interest, f
 
 \subsection*{PCA}
 
-The first principal component (PC1) is most important and it accounts for
-32.36\% of the variance (see PC1 vs PC2 and Eigenvalue rank plots in Figure \ref{fig:pca}. The RMSF is in good correlation with PC1 (not shown here).
+The first three principal components are responsible for 45.5\% of the total variance, but it is clear from the eigenvalue rank plot (Figure \ref{fig:pca}) that the first principal component (PC1) is most important. PC1 accounts for 32.4\% of the variance, so PC2 and PC3 are not further investigated (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). The Hsp90 contracts slightly and the C-terminal wags while binding the inhibitor; this is reminiscent of a rocking and breathing motion. PC1 exhibits periodic motion as there is movement from  positive to negative and back to positive. The RMSF is in good correlation with PC1 (not shown here).
+
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
   \caption{\csentence{Principal Component Analysis.}
-      PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an Eigenvalue rank plot. }
+      PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an eigenvalue rank plot. In the eigenvalue plot the cumulative variance is labelled for each data point.}
  \label{fig:pca}
  \end{figure}
 %\includegraphics{images/htmd_analysis_pca.png}
@@ -1511,11 +1512,12 @@ The Galaxy server that was used for some calculations is in part funded by Colla
 
 \section*{Data and material availability}
   Data and materials are available on GitHub:
-  TODO\ldots
+
   \begin{itemize}
   \item   Public European Galaxy server(\url{https://cheminformatics.usegalaxy.eu/}) 
   \item Galaxy Computation Chemistry South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/})
   \item Galaxy Training Materials website (\url{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html})
+  \item   TODO workflow or any other materials\ldots
 \end{itemize}
 
 

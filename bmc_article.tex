@@ -82,6 +82,7 @@
 \usepackage{enumitem}
 \usepackage{graphicx}
 \graphicspath{ {./images/} }
+\usepackage{minted}
 \usepackage{hyperref} %<--- Load after everything else
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -126,6 +127,7 @@
 \newcounter{handsoncounter}
 \newtcolorbox[use counter=handsoncounter,number format=\arabic]{handson_box_colour}[2][]{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm, title=Hands-on \thetcbcounter: #2,#1}
 %\newtcolorbox{handson_box_colour}{boxrule=0.3mm,colback=gray!5!white,colframe=bmcblue, arc=0mm}
+
 
 %%% Begin ...
 \begin{document}
@@ -996,7 +998,7 @@ sets that measures the average distance between a group of atoms. The
 RMSD of the C$\alpha$ atoms of the protein backbone is calculated here and
 is a measure of how much the protein conformation has changed between different time points in the trajectory. Note that if protein-protein interactions were being studied, we would need to consider a different selection. 
 
-For the RMSD analysis of ligand, the `Select domains' parameter of the tool can be set to `Ligand', however this automatic selection sometimes fails. Instead, the selection is done with the `Residue ID' which is then specified in the textbox provided. In this example the ligand's Residue ID is `UNL'. The output is the requested RMSD data as a timeseries, the RMSD plotted as a timeseries and as a histogram (for example see Figure \ref{fig:rmsdprotein} in the results section).
+For the RMSD analysis of ligand, the `Select domains' parameter of the tool can be set to `Ligand', however this automatic selection sometimes fails. Instead, the selection is done with the `Residue ID' which is then specified in the textbox provided. In this example the ligand's Residue ID is `G5E'. The output is the requested RMSD data as a timeseries, the RMSD plotted as a timeseries and as a histogram (for example see Figure \ref{fig:rmsdprotein} in the results section).
 
 \begin{handson_box_colour}{RMSD Analysis: protein}
 %\hypertarget{hands-on-task-description-9}{%
@@ -1071,7 +1073,7 @@ For the RMSD analysis of ligand, the `Select domains' parameter of the tool can 
     \begin{itemize}
     \tightlist
     \item
-      \emph{``Residue ID''}: \texttt{UNL}
+      \emph{``Residue ID''}: \texttt{G5E}
     \end{itemize}
   \end{itemize}
 
@@ -1238,7 +1240,7 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
   \item
     \emph{``Selection 1''}: \texttt{protein}
   \item
-    \emph{``Selection 2''}: \texttt{resname\ UNL}
+    \emph{``Selection 2''}: \texttt{resname\ G5E}
   \end{itemize}
 
 
@@ -1264,7 +1266,7 @@ The MMPBSA tool supports the AMBER topology format only. To convert from GROMACS
 '.top' and '.gro' to AMBER topologies, use the `Convert Parameters' tool which uses
 ParmEd\cite{Swails2016} to carry out the conversion. The result will be four AMBER `.prmtop'
 files which are required for the binding free energy estimate
-calculation. Selections are provided to the tool in order to remove unneccesary molecules. For example, to create the ligand `.prmtop' output, the ligand selection \texttt{!:UNL} selects and removes all molecules that are not the ligand.
+calculation. Selections are provided to the tool in order to remove unneccesary molecules. For example, to create the ligand `.prmtop' output, the ligand selection \texttt{!:G5E} selects and removes all molecules that are not the ligand.
 
 \begin{handson_box_colour}{Parameter Conversion}
 
@@ -1293,9 +1295,9 @@ calculation. Selections are provided to the tool in order to remove unneccesary 
       dataset)
     \end{itemize}
   \item
-    \emph{``Ligand selection''}: \texttt{!:UNL}
+    \emph{``Ligand selection''}: \texttt{!:G5E}
   \item
-    \emph{``Receptor selection''}: \texttt{:NA,CL,SOL,UNL}
+    \emph{``Receptor selection''}: \texttt{:NA,CL,SOL,G5E}
   \item
     \emph{``Complex selection''}: \texttt{:NA,CL,SOL}
   \end{itemize}
@@ -1369,11 +1371,10 @@ calculation. Selections are provided to the tool in order to remove unneccesary 
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.084, suggesting that the simulation length may be sufficient for sampling of the PC1 motion; nevertheless, in more advanced simulations it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
+After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not converged, this is because a short simulation was used in the tutorial, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
 
 \subsection*{RMSD protein}
-The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
-an average RMSD between 1.0{\AA} and 1.3{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
+The RMSD timeseries for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
@@ -1387,12 +1388,12 @@ an average RMSD between 1.0{\AA} and 1.3{\AA}. There are no large conformational
 \subsection*{RMSD ligand}
 Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If the ligand is not stable, there will be large fluctuations in the RMSD.
 
-In this case the RMSD seems to stabilize at 1.0{\AA} and then transitions back to 0.5{\AA}. This is more clearly seen in the histogram, see Figure \ref{fig:rmsdligand}. There is a bimodal distribution with centers at 0.3{\AA} and 1.0{\AA} which both have significant populations. There are two binding poses which can be visually assessed using VMD\cite{hump_vmd_1996}, see Figure \ref{fig:rmsdligand}. The ligand pose seen at 0.3{\AA}  and in the lower left of Figure \ref{fig:rmsdligand} is less sampled. While, the more populated binding pose seen on the right hand side of Figure \ref{fig:rmsdligand} is also seen in the crystal structure. 
+In this case the ligand is stable with a single binding mode. The RMSD fluctuates around 0.3{\AA}, with a slight fluctuation near the end of the simulation. This is more clearly seen in the histogram, see Figure \ref{fig:rmsdligand}. The conformation seen during simulation is very similar to that in the crystal structure and the ligand is stable in the active site.
 
 \begin{figure}[ht!]
-  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_with_binding_merge}
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_merge}
   \caption{\csentence{RMSD for the ligand.}
-      RMSD time series and histogram for the ligand. The two docking poses seen for the resorcinol ligand in Hsp90, rendered using VMD~\cite{hump_vmd_1996}}
+      RMSD time series and histogram for the ligand.}
   \label{fig:rmsdligand}
 \end{figure}
 %\includegraphics{images/htmd_analysis_rmsd2_series.png}
@@ -1415,7 +1416,7 @@ When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{
 
 \subsection*{PCA}
 
-The first three principal components are responsible for 45.5\% of the total variance, but it is clear from the eigenvalue rank plot (Figure \ref{fig:pca}) that the first principal component (PC1) is most important. PC1 accounts for 32.4\% of the variance, so PC2 and PC3 are not further investigated (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). This analysis indicates that the Hsp90 contracts slightly and the C-terminal wags; this is reminiscent of a rocking and breathing motion. PC1 exhibits periodic motion as there is movement from  positive to negative and back to positive. 
+The first three principal components are responsible for 32.8\% of the total variance, as seen in the eigenvalue rank plot (Figure \ref{fig:pca}). The first principal component (PC1) accounts for 15.4\% of the variance (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). Visualisation of PC1 using VMD\cite{hump_vmd_1996} shows a rocking motion and wagging of the C-terminal.
 
 
 \begin{figure}[ht!]
@@ -1428,11 +1429,7 @@ The first three principal components are responsible for 45.5\% of the total var
 %\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
 \subsection*{Hydrogen bonding and further analysis}
-The active site of this protein is quite hydrophobic. A single hydrogen
-bond is seen between the ligand and Hsp90, this is between Threonine 184
-and the ligand. This hydrogen bond is not persistent, the occupancy is
-small, 0.2\%, the hydrogen bond is not present for most of the simulation
-(according to the criteria for hydrogen bonding).
+The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond with the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation.
 
 An MMGBSA calculation using the single trajectory protocol yields a binding estimate of -19.62 kcal/mol (-82.09 kJ/mol) for this ligand. The negative value suggests the complex is thermodynamically stable, as we expect. Note that this value does not include the entropy contribution, but this is likely to be relatively small.
 
@@ -1477,11 +1474,10 @@ Note that the SD-file needs to contain ligands with the correct 3D coordinates f
 
 Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows\cite{gtn_toworkflow}, multiple histories\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
 
-An example bioblend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below. TODO: reconcile with the two-column layout.
+An example BioBlend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below. TODO: reconcile with the two-column layout.
 
-\begin{handson_box_colour}{Bioblend script}
-\lipsum
-\begin{verbatim}
+\begin{handson_box_colour}{BioBlend script}
+\begin{minted}[linenos=false, breaklines, breakafter=d, fontsize=\small]{python} 
 from bioblend import galaxy
 
 API_KEY = 'YOUR USEGALAXY.EU API KEY'
@@ -1504,8 +1500,9 @@ for ligand in ligands:
         },
         history_name='HTMD run on {}'.format(ligand),
     )
-\end{verbatim}
+\end{minted}
 \end{handson_box_colour}
+
 
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}

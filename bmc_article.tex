@@ -939,7 +939,7 @@ We can now remove the restraints and continue with the production simulation. Th
 \hypertarget{analysis}{%
 \section*{Analysis Methods}\label{analysis}}
 
-An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015}, Bio3D\cite{skjaerven_integrating_2014} and MMPBSA.py\cite{miller_mmpbsa}. These tools output both tabular files as well as a variety of attractive plots.
+An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015}, and  Bio3D\cite{skjaerven_integrating_2014}. These tools output both tabular files as well as a variety of attractive plots.
 
 
 
@@ -1249,124 +1249,6 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
 \end{handson_box_colour}
 
 
-\hypertarget{optional-estimate-the-binding-free-energy}{%
-\subsection*{Estimate the binding free
-energy}\label{optional-estimate-the-binding-free-energy}}
-
-The binding free energy between a ligand and a receptor can be estimated using Molecular Mechanics Poisson-Boltzman or General Born Surface Area (MMPBSA or MMGBSA). For
-the simplest form of calculation, a Single Trajectory Estimate, a
-simulation of the complex in water is run. The trajectory of this complex is used to estimate the
-MMPBSA or MMGBSA depending on the options chosen. A General Born (GB)
-calculation is recommended here as it completes in reasonable time.
-
-%\hypertarget{converting-parameters}{%
-%\subsubsection*{Converting parameters}\label{converting-parameters}}
-
-The MMPBSA tool supports the AMBER topology format only. To convert from GROMACS
-'.top' and '.gro' to AMBER topologies, use the `Convert Parameters' tool which uses
-ParmEd\cite{Swails2016} to carry out the conversion. The result will be four AMBER `.prmtop'
-files which are required for the binding free energy estimate
-calculation. Selections are provided to the tool in order to remove unneccesary molecules. For example, to create the ligand `.prmtop' output, the ligand selection \texttt{!:G5E} selects and removes all molecules that are not the ligand.
-
-\begin{handson_box_colour}{Parameter Conversion}
-
-%\hypertarget{hands-on-task-description-17}{%
-%\subsubsection{Hands-on: Task
-%description}\label{hands-on-task-description-17}}
-
-% \begin{enumerate}
-% \def\labelenumi{\arabic{enumi}.}
-% \tightlist
-% \item
-  \textbf{Convert Parameters} with the following parameters:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    \emph{``Force Field format''}: \texttt{GROMACS}
-
-    \begin{itemize}
-    \tightlist
-    \item
-      \emph{``Input topology (top) file''}: \texttt{output} (Input
-      dataset)
-    \item
-      \emph{``Input structure (gro) file''}: \texttt{output} (Input
-      dataset)
-    \end{itemize}
-  \item
-    \emph{``Ligand selection''}: \texttt{!:G5E}
-  \item
-    \emph{``Receptor selection''}: \texttt{:NA,CL,SOL,G5E}
-  \item
-    \emph{``Complex selection''}: \texttt{:NA,CL,SOL}
-  \end{itemize}
-
-% \end{enumerate}
-\end{handson_box_colour}
-
-%\hypertarget{binding-free-energy-estimate}{%
-%\subsection*{Binding free energy estimate}\label{binding-free-energy-estimate}}
-
-\begin{handson_box_colour}{Calculate MMGBSA}
-%\hypertarget{hands-on-task-description-18}{%
-%\subsubsection{Hands-on: Task
-%description}\label{hands-on-task-description-18}}
-
-% \begin{enumerate}
-% \def\labelenumi{\arabic{enumi}.}
-% \tightlist
-% \item
-  \textbf{mmpbsa mmgbsa} with the following parameters:
-
-  \begin{itemize}
-  \tightlist
-  \item
-    In \emph{``Input''}:
-    \begin{itemize}
-    \tightlist
-    \item
-      \emph{``Single or Multiple Trajectories''}:
-      \texttt{Single\ Trajectory\ Protocol\ (STP)}
-
-      \begin{itemize}
-      \tightlist
-      \item
-        \emph{``AMBER prmtop input for Ligand''}: \texttt{output} (Input
-        dataset)
-      \end{itemize}
-    \end{itemize}
-  \item
-    In \emph{``General parameters''}:
-    \begin{itemize}
-    \tightlist
-    \item      
-      \emph{``Final frame to analyse''}: \texttt{2000}
-    \item      
-      \emph{``interval between frames analysed''}: \texttt{5}
-    \item      
-      \emph{``quasi-harmonic entropy calculation''}: \texttt{No}
-    \item
-      \emph{``Strip mask''}: \texttt{:NA:SOL:CL}
-    \end{itemize}
-  \item
-    In \emph{``Details of calculation and parameters''}:
-    \begin{itemize}
-    \tightlist
-    \item
-      \emph{``General Born calculation''}: \texttt{yes}
-    \item
-      \emph{``Poisson Boltzman calculation''}: \texttt{no}
-    \item
-      \emph{``Decomposition Analysis''}: \texttt{yes}
-    \end{itemize}
-  \end{itemize}
-
-
-% \end{enumerate}
-
-
-\end{handson_box_colour}
 
 
 \hypertarget{resultsanddiscussion}{%
@@ -1428,10 +1310,8 @@ The first three principal components are responsible for 32.8\% of the total var
 %\includegraphics{images/htmd_analysis_pca.png}
 %\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
-\subsection*{Hydrogen bonding and further analysis}
+\subsection*{Hydrogen bonding}
 The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond with the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation.
-
-An MMGBSA calculation using the single trajectory protocol yields a binding estimate of -19.62 kcal/mol (-82.09 kJ/mol) for this ligand. The negative value suggests the complex is thermodynamically stable, as we expect. Note that this value does not include the entropy contribution, but this is likely to be relatively small.
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
 \section*{High throughput methods}\label{optional-automating-high-throughput-calculations}}

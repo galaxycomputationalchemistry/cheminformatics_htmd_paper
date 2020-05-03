@@ -233,8 +233,7 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-This paper is a tutorial developed for the data analysis platform Galaxy. Galaxy's concept makes high-throughput computational data analysis a
-structured, reproducible and transparent process. In this tutorial we
+This paper is a tutorial developed for the data analysis platform Galaxy. Galaxy's concept makes high-throughput computational data analysis, including in molecular dynamics, a structured, reproducible and transparent process. In this tutorial we
 focus on 3 questions: How are protein-ligand systems parameterized for
 molecular dynamics simulation? What kind of analysis can be carried out
 on molecular trajectories? How can high-throughput MD be used to study
@@ -308,8 +307,7 @@ ligands for the Hsp90 protein.
 
 Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy's
-concept makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
 
 The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015} engine), to analysis of the results.
 
@@ -535,14 +533,13 @@ Here, we use GAFF (general AMBER force field), which is a generalized AMBER forc
 
 We select charge and multiplicity as appropriate. The ligand studied here is neutral, so the charge is 0. The multiplicity is 1, which will be the case for every simple organic molecule we encounter; only if we deal with more exotic species such as metal complexes or carbenes will we need to consider higher values.
 
-\subsection*{Solvation and energy
-minimization}\label{solvation-and-energy-minimization}
+%\subsection*{Solvation and energy minimization}\label{solvation-and-energy-minimization}
 
 Having generated topologies, we now need to combine them, define the box
 which contains the system, add solvent and ions, and perform an energy
 minimization step.
 
-\subsubsection*{Combine topology and GRO
+\subsection*{Combine topology and GRO
 files}\label{combine-topology-and-gro-files}
 
 While we have separate topology and structure files for both protein and ligand, we need to combine them into a single set of files to continue with the simulation setup. A dedicated Galaxy tool is provided for this, using the Python library ParmEd~\cite{Swails2016}.
@@ -862,7 +859,7 @@ equilibration}
 
 \subsection*{Production simulation}\label{production-simulation}
 
-We can now remove the restraints and continue with the production simulation. The simulation will run for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short, but sufficient for the purposes of a tutorial. The same tool can be used to extend the existing simulation. 
+We can now remove the restraints and continue with the production simulation. The simulation will run for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short compared to the state-of-the-art, but sufficient for the purposes of a tutorial. The same tool can be used to extend the existing simulation.
 
 \begin{handson_box_colour}{Main simulation}
 
@@ -947,7 +944,7 @@ An analysis of the GROMACS simulation outputs will be carried out using Galaxy t
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
 \subsection*{Convert coordinate and trajectory formats}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
-Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format. A number of the analysis tools being used have been built to analyse trajectories in CHARMM's DCD format. This tool was used to interconvert between several other trajectory formats. 
+Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format. A number of the analysis tools being used have been built to analyse trajectories in CHARMM's DCD format. This tool was used to interconvert between several other trajectory formats. 
 
 \begin{handson_box_colour}{Convert coordinate and trajectory formats}
 \begin{enumerate}
@@ -1126,7 +1123,7 @@ The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents
 
 Principal component analysis (PCA) converts a set of correlated
 observations (movement of selected atoms in protein) to a set of principal
-components which are linearly independent (or uncorrelated). Here several related tools are used. 
+components (PCs) which are linearly independent (or uncorrelated). Here several related tools are used. 
 The PCA tool calculates the PCA in order to determine the relationship between statistically meaningful conformations (major global motions) sampled during the trajectory. The C$\alpha$ carbons of the protein backbone are again a good selection for this purpose.  Outputs include the PCA raw data and figures of the relevant principal components (PCs) as well as an eigenvalue rank plot (see Figure \ref{fig:pca}) which is used to visualize the proportion of variance due to each principal component (remembering that the PCs are ranked eigenvectors based on the variance). 
 Having discovered the principal components usually these are visualized. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD\cite{hump_vmd_1996} or NGL viewer\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation is not converged, thus the simulation length is insufficient and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
 
@@ -1216,7 +1213,7 @@ Having discovered the principal components usually these are visualized. The PCA
 \hypertarget{hydrogen-bond-analysis}{%
 \subsection*{Hydrogen bond analysis}\label{hydrogen-bond-analysis}}
 
-Hydrogen bonding interactions contribute to binding and are worth investigating, in particular persistent hydrogen bonds. All possible hydrogen bonding interactions between the two selected regions, here the protein and the ligand, are investigated over time using VMD hydrogen bond analysis tool in Galaxy. Hydrogen bonds are identified and in the output the total number of hydrogen bonds and  occupancy over time is returned.
+Hydrogen bonding interactions contribute to binding and are worth investigating, in particular persistent hydrogen bonds. All possible hydrogen bonding interactions between the two selected regions, here the protein and the ligand, are investigated over time using the VMD hydrogen bond analysis tool included in Galaxy. Hydrogen bonds are identified and in the output the total number of hydrogen bonds and  occupancy over time is returned.
 
 \begin{handson_box_colour}{Hydrogen bond analyis}
 %\hypertarget{hands-on-task-description-16}{%
@@ -1264,7 +1261,7 @@ calculation is recommended here as it completes in reasonable time.
 %\subsubsection*{Converting parameters}\label{converting-parameters}}
 
 The MMPBSA tool supports the AMBER topology format only. To convert from GROMACS
-'.top' and '.gro' to AMBER topologies, use the 'Convert Parameters' tool which uses
+'.top' and '.gro' to AMBER topologies, use the `Convert Parameters' tool which uses
 ParmEd\cite{Swails2016} to carry out the conversion. The result will be four AMBER `.prmtop'
 files which are required for the binding free energy estimate
 calculation. Selections are provided to the tool in order to remove unneccesary molecules. For example, to create the ligand `.prmtop' output, the ligand selection \texttt{!:UNL} selects and removes all molecules that are not the ligand.
@@ -1372,11 +1369,11 @@ calculation. Selections are provided to the tool in order to remove unneccesary 
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.084, suggesting that the simulation length may be sufficient for sampling of the PC1 motion, nevertheless it is the norm to extend simulations from to hundreds of nanoseconds if not microseconds.
+After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.084, suggesting that the simulation length may be sufficient for sampling of the PC1 motion; nevertheless, in more advanced simulations it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure with
-an average RMSD between 1.0{\AA} and 1.3{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created as part of the tools outputs in Galaxy. 
+an average RMSD between 1.0{\AA} and 1.3{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
@@ -1404,7 +1401,7 @@ In this case the RMSD seems to stabilize at 1.0{\AA} and then transitions back t
 
 
 \subsection*{RMSF}
-When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus, this is fairly common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions.
+When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus; this is common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions.
 
 
 % possibly RMSF fig but not really needed
@@ -1479,7 +1476,36 @@ Note that the SD-file needs to contain ligands with the correct 3D coordinates f
 \subsection*{Further information}
 
 Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows\cite{gtn_toworkflow}, multiple histories\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
-TODO: optional, maybe a short bioblend script?
+
+An example bioblend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below. TODO: reconcile with the two-column layout.
+
+\begin{handson_box_colour}{Bioblend script}
+\lipsum
+\begin{verbatim}
+from bioblend import galaxy
+
+API_KEY = 'YOUR USEGALAXY.EU API KEY'
+gi = galaxy.GalaxyInstance(key=API_KEY,
+    url='https://usegalaxy.eu/')
+workflow_id = 'adc6d049e9283789' 
+# ID for GROMACS workflow
+
+ligands = {
+'ligand1': '11ac94870d0bb33a79c5fa18b0fd3b4c',
+    # ligand_name: dataset ID
+    # ...
+}
+
+for ligand in ligands:
+    invocation = gi.workflows.invoke_workflow(
+        workflow_id,
+        inputs={
+            '1': {'src': 'hda', 'id': ligands[ligand]}
+        },
+        history_name='HTMD run on {}'.format(ligand),
+    )
+\end{verbatim}
+\end{handson_box_colour}
 
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}

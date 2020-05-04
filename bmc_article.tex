@@ -309,14 +309,12 @@ ligands for the Hsp90 protein.
 
 Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy \cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform.
-
-The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015} engine), to analysis of the results.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy~\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform. The aim of this tutorial is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015} engine), to analysis of the results.
 
 The entire analysis described in this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
-(\url{https://cheminformatics.usegalaxy.eu/}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/}).
+(\url{https://cheminformatics.usegalaxy.eu}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za}).
 
-The tutorial presented in this article has been developed by the Galaxy Training Network \cite{Batut2018} and its most up-to-date version is available online on the Galaxy Training Materials website\cite{gtn_comp}.
+The tutorial presented in this article has been developed by the Galaxy Training Network~\cite{Batut2018} and its most up-to-date version is available online on the Galaxy Training Materials website~\cite{gtn_comp}.
 
 
 \subsection*{What is high-throughput molecular
@@ -939,7 +937,7 @@ We can now remove the restraints and continue with the production simulation. Th
 \hypertarget{analysis}{%
 \section*{Analysis Methods}\label{analysis}}
 
-An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis\cite{michaudagrawal_mdanalysis_2011}, MDTraj\cite{mcgibbon_mdtraj_2015}, and  Bio3D\cite{skjaerven_integrating_2014}. These tools output both tabular files as well as a variety of attractive plots.
+An analysis of the GROMACS simulation outputs will be carried out using Galaxy tools developed for computational chemistry~\cite{senapathi_biomolecular_2019} based on popular analysis software - MDAnalysis~\cite{michaudagrawal_mdanalysis_2011}, MDTraj~\cite{mcgibbon_mdtraj_2015}, and  Bio3D~\cite{skjaerven_integrating_2014}. These tools output both tabular files as well as a variety of attractive plots.
 
 
 
@@ -1087,7 +1085,7 @@ For the RMSD analysis of ligand, the `Select domains' parameter of the tool can 
 \hypertarget{rmsf-analysis}{%
 \subsection*{RMSF analysis}\label{rmsf-analysis}}
 
-The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. The fluctuation of particular amino acids in the protein are considered. The C$\alpha$ of the protein, designated by C-alpha, is a good selection to understand the change in protein structure. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectroscopy\cite{berjanskii_nmr_2006,kuzmanic_determination_2010}. The output from the tools is the requested RMSF data and the RMSF plotted as a timeseries (for example see Figure \ref{fig:rmsf} in the results section).
+The Root Mean Square Fluctuation (RMSF) is valuable to consider as it represents the deviation at a reference position over time. The fluctuation of particular amino acids in the protein are considered. The C$\alpha$ of the protein, designated by C-alpha, is a good selection to understand the change in protein structure. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectroscopy~\cite{berjanskii_nmr_2006,kuzmanic_determination_2010}. The output from the tools is the requested RMSF data and the RMSF plotted as a timeseries (for example see Figure \ref{fig:rmsf} in the results section).
 
 \begin{handson_box_colour}{RMSF Analysis}
 
@@ -1127,7 +1125,7 @@ Principal component analysis (PCA) converts a set of correlated
 observations (movement of selected atoms in protein) to a set of principal
 components (PCs) which are linearly independent (or uncorrelated). Here several related tools are used. 
 The PCA tool calculates the PCA in order to determine the relationship between statistically meaningful conformations (major global motions) sampled during the trajectory. The C$\alpha$ carbons of the protein backbone are again a good selection for this purpose.  Outputs include the PCA raw data and figures of the relevant principal components (PCs) as well as an eigenvalue rank plot (see Figure \ref{fig:pca}) which is used to visualize the proportion of variance due to each principal component (remembering that the PCs are ranked eigenvectors based on the variance). 
-Having discovered the principal components usually these are visualized. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD\cite{hump_vmd_1996} or NGL viewer\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation is not converged, thus the simulation length is insufficient and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
+Having discovered the principal components usually these are visualized. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD~\cite{hump_vmd_1996} or NGL viewer~\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation is not converged and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
 
 
 \begin{handson_box_colour}{PCA with BIO3D}
@@ -1157,7 +1155,7 @@ Having discovered the principal components usually these are visualized. The PCA
 % \end{enumerate}
 \end{handson_box_colour}
 
-\begin{handson_box_colour}{PCA visualisation}
+\begin{handson_box_colour}{PCA visualization}
 %\hypertarget{hands-on-task-description-15}{%
 %\subsubsection{Hands-on: Task
 %description}\label{hands-on-task-description-15}}
@@ -1253,7 +1251,7 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation converged and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not converged, this is because a short simulation was used in the tutorial, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
+After the completion of the simulation important questions are i) is the simulation converged enough.  and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not converged enough. The simulation length was chosen to be short as we cannot provide a large amount of computational resources on a public server for training purposes. For production level simulations, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
@@ -1298,13 +1296,13 @@ When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{
 
 \subsection*{PCA}
 
-The first three principal components are responsible for 32.8\% of the total variance, as seen in the eigenvalue rank plot (Figure \ref{fig:pca}). The first principal component (PC1) accounts for 15.4\% of the variance (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). Visualisation of PC1 using VMD\cite{hump_vmd_1996} shows a rocking motion and wagging of the C-terminal.
+The first three principal components are responsible for 32.8\% of the total variance, as seen in the eigenvalue rank plot (Figure \ref{fig:pca}). The first principal component (PC1) accounts for 15.4\% of the variance (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). Visualization of PC1 using VMD~\cite{hump_vmd_1996} shows a rocking motion and wagging of the C-terminal.
 
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
   \caption{\csentence{Principal Component Analysis.}
-      PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an eigenvalue rank plot. In the eigenvalue plot the cumulative variance is labelled for each data point.}
+      PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an eigenvalue rank plot. In the eigenvalue plot the cumulative variance is labeled for each data point.}
  \label{fig:pca}
  \end{figure}
 %\includegraphics{images/htmd_analysis_pca.png}
@@ -1332,7 +1330,7 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \item
   Upload the SD-file containing the new ligand structures from Zenodo (LINK...) and rename it `Ligands (SDF)'
 \item
-  Import the workflow from the European\cite{eu_htmd_simulation_workflow} or the South African Galaxy server.
+  Import the workflow from the European~\cite{eu_htmd_simulation_workflow} or the South African Galaxy server.
 \item
   Run the imported workflow with the following parameters:
 
@@ -1346,13 +1344,13 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \end{enumerate}
 \end{handson_box_colour}
 
-This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's collection\cite{gtn_collections} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
+This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's collection~\cite{gtn_collections} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
 
-Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided here\cite{eu_6hhr}.
+Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided here~\cite{eu_6hhr}.
 
 \subsection*{Further information}
 
-Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows\cite{gtn_toworkflow}, multiple histories\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
+Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows~\cite{gtn_toworkflow}, multiple histories~\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)~\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
 
 An example BioBlend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below. TODO: reconcile with the two-column layout.
 
@@ -1416,8 +1414,8 @@ The Galaxy server that was used for some calculations is in part funded by Colla
   Data and materials are available on GitHub:
 
   \begin{itemize}
-  \item   Public European Galaxy server(\url{https://cheminformatics.usegalaxy.eu/}) 
-  \item Galaxy Computation Chemistry South Africa server (\url{https://galaxy-compchem.ilifu.ac.za/})
+  \item   Public European Galaxy server(\url{https://cheminformatics.usegalaxy.eu}) 
+  \item Galaxy Computation Chemistry South Africa server (\url{https://galaxy-compchem.ilifu.ac.za})
   \item Galaxy Training Materials website (\url{https://training.galaxyproject.org/topics/computational-chemistry/tutorials/htmd-analysis/tutorial.html})
   \item   TODO workflow or any other materials\ldots
 \end{itemize}

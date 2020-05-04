@@ -235,7 +235,7 @@
 \begin{abstractbox}
 
 \begin{abstract} % abstract
-This paper is a tutorial developed for the data analysis platform Galaxy. Galaxy's concept makes high-throughput computational data analysis, including in molecular dynamics, a structured, reproducible and transparent process. In this tutorial we
+This paper is a tutorial developed for the data analysis platform Galaxy. Galaxy's concept makes high-throughput computational data analysis, such as molecular dynamics, a structured, reproducible and transparent process. In this tutorial we
 focus on 3 questions: How are protein-ligand systems parameterized for
 molecular dynamics simulation? What kind of analysis can be carried out
 on molecular trajectories? How can high-throughput MD be used to study
@@ -1251,7 +1251,7 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation important questions are i) is the simulation converged enough.  and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not converged enough. The simulation length was chosen to be short as we cannot provide a large amount of computational resources on a public server for training purposes. For production level simulations, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds.
+After the completion of the simulation important questions are i) is the simulation converged enough.  and ii) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range, these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. Here, the PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not fully converged. This is expected due to the short simulation length; however, 1 ns is sufficient for training purposes. For production level simulations, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds. As this tutorial is designed to be carried out on public webservers, we limit simulations to 1 ns as we cannot provide a large amount of computational resources for training purposes. 
 
 \subsection*{RMSD protein}
 The RMSD timeseries for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
@@ -1268,7 +1268,7 @@ The RMSD timeseries for the protein shows a thermally stable and equilibrated st
 \subsection*{RMSD ligand}
 Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If the ligand is not stable, there will be large fluctuations in the RMSD.
 
-In this case the ligand is stable with a single binding mode. The RMSD fluctuates around 0.3{\AA}, with a slight fluctuation near the end of the simulation. This is more clearly seen in the histogram, see Figure \ref{fig:rmsdligand}. The conformation seen during simulation is very similar to that in the crystal structure and the ligand is stable in the active site.
+In our case the ligand is stable with a single binding mode. The RMSD fluctuates around 0.3{\AA}, with a slight fluctuation near the end of the simulation. This is more clearly seen in the histogram, see Figure \ref{fig:rmsdligand}. The conformation seen during simulation is very similar to that in the crystal structure and the ligand is stable in the active site.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_merge}
@@ -1282,7 +1282,7 @@ In this case the ligand is stable with a single binding mode. The RMSD fluctuate
 
 
 \subsection*{RMSF}
-When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. Very large fluctuations are seen for the C-terminus; this is common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions.
+When considering the RMSF, Figure \ref{fig:rmsf}, fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. These are actually residues 67, 127 and 167 as the first few residues of this protein are missing in the PDB and were not added using homology modeling in this tutorial. Specifically asp-66 pro-67 ser-68; ala-126 asp-127 ile-128; thr-175 thr-176 glu-178. Residue position 0 in the RMSF is actually position 17 in the Hsp90 FASTA primary sequence. This is a fairly common problem that can occur with molecular modeling of proteins where there may be missing residues at the beginning or within the sequence. It is important to double check and often the residue names are given for clarity. Very large fluctuations are seen for the C-terminus; this is common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions.
 
 
 % possibly RMSF fig but not really needed
@@ -1309,7 +1309,7 @@ The first three principal components are responsible for 32.8\% of the total var
 %\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
 \subsection*{Hydrogen bonding}
-The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond with the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation.
+The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond with the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
 \section*{High throughput methods}\label{optional-automating-high-throughput-calculations}}
@@ -1344,15 +1344,15 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \end{enumerate}
 \end{handson_box_colour}
 
-This process runs the whole of the simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's collection~\cite{gtn_collections} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
+This process runs the entire simulation and analysis procedure described so far to be run on the new ligands used. It uses Galaxy's collection~\cite{gtn_collections} feature to organize the data; each item in the history is a collection (essentially a directory) containing one file corresponding to each of the input ligands.
 
-Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided here~\cite{eu_6hhr}.
+Note that the SD-file needs to contain ligands with the correct 3D coordinates for MD simulation. The easiest way to obtain these is using a molecular docking tool such as Autodock Vina~\cite{Trott2009} or rDock~\cite{Ruiz2014}; tutorials and workflows are available for both of these from the Galaxy Training Network. As an example, the history in which the SD-file used in the HTMD workflow is generated (using AutoDock Vina) is provided~\cite{eu_6hhr}.
 
 \subsection*{Further information}
 
-Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows~\cite{gtn_toworkflow}, multiple histories~\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)~\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server via scripts, automate repetitive tasks, interact with external resources and create more complex workflows (which have repetition or branching).
+Apart from manual setups or collections, there are several other alternatives. Galaxy supports and provides training material for converting histories to workflows~\cite{gtn_toworkflow}, multiple histories~\cite{gtn_multiple}, and the Galaxy Application Programming Interface (API)~\cite{gtn_api}. For beginners and users who prefer a visual interface, automation can be done using multiple histories and collections with the standard Galaxy user interface. If you are able to write small scripts you can automate everything you have learned here with the Galaxy API. The Galaxy API allows you to interact with the server to automate repetitive tasks and create more complex workflows (which have repetition or branching).
 
-An example BioBlend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below. TODO: reconcile with the two-column layout.
+An example BioBlend script, which runs the GROMACS simulation workflow for each of a list of ligands, is given below.
 
 \begin{handson_box_colour}{BioBlend script}
 \begin{minted}[linenos=false, breaklines, breakafter=d, fontsize=\small]{python} 
@@ -1385,9 +1385,9 @@ for ligand in ligands:
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
 
-This tutorial provides a guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the pain from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary. Apart from streamlining the process for existing MD users, this tutorial should also provide useful as a pedagogical guide for educating students or newcomers to the field.
+This tutorial provides a guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the pain from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary. Apart from streamlining the process for existing MD users, this tutorial should also prove useful as a pedagogical guide for educating students or newcomers to the field.
 
-After completing the tutorial, the user should be familiar at a basic level with a range of MD analysis techniques, and understand the steps required for a typical MD simulation. Thus, they should be armed to apply these tools to their own problems.
+After completing the tutorial, the user will be familiar at a basic level with a range of MD analysis techniques, and understand the steps required for a typical MD simulation. Thus, they will be equipped to apply these tools to their own problems.
 
 
 

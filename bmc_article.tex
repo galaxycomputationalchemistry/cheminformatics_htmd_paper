@@ -307,9 +307,9 @@ ligands to the Hsp90 protein.
 \hypertarget{introduction}{%
 \section*{Introduction}\label{introduction}}
 
-Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins.~\cite{berendsen01} However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis~\cite{senapathi_biomolecular_2019}. MD simulations are rarely performed singly; in recent years, the concept of high-throughput molecular dynamics (HTMD) has come to the fore.~\cite{HARVEY20121059}~\cite{Guterres2020} Galaxy lends itself well to this kind of study, as we will demonstrate in this paper, thanks to features allowing construction of complex workflows, which can then be executed on multiple inputs in parallel.
+Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins~\cite{berendsen01}. However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis~\cite{senapathi_biomolecular_2019}. MD simulations are rarely performed singly; in recent years, the concept of high-throughput molecular dynamics (HTMD) has come to the fore~\cite{HARVEY20121059,Guterres2020}. Galaxy lends itself well to this kind of study, as we will demonstrate in this paper, thanks to features allowing construction of complex workflows, which can then be executed on multiple inputs in parallel.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy~\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform. The aim is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015}~\cite{Lemkul2019} engine), to analysis of the results.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy~\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform. The aim is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015,Lemkul2019} engine), to analysis of the results.
 
 The entire analysis described in this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
 (\url{https://cheminformatics.usegalaxy.eu}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za}).
@@ -336,21 +336,21 @@ The 90 kDa heat shock protein (Hsp90) is a chaperone protein responsible
 for catalyzing the conversion of a wide variety of proteins to a
 functional form; examples of the Hsp90 clientele, which totals several
 hundred proteins, include nuclear steroid hormone receptors and protein
-kinases.~\cite{Pearl2006} The mechanism by which Hsp90 acts varies between clients, as
+kinases~\cite{Pearl2006}. The mechanism by which Hsp90 acts varies between clients, as
 does the client binding site; the process is dependent on
 post-translational modifications of Hsp90 and the identity of
-co-chaperones which bind and regulate the conformational cycle.~\cite{Schopf2017}
+co-chaperones which bind and regulate the conformational cycle~\cite{Schopf2017}.
 
 Due to its vital biochemical role as a chaperone protein involved in
 facilitating the folding of many client proteins, Hsp90 is an attractive
 pharmaceutical target. In particular, as protein folding is a potential
-bottleneck to slow cellular reproduction and growth, blocking Hsp90
+bottleneck to cellular reproduction and growth, blocking Hsp90
 function using inhibitors which bind tightly to the ATP binding site of the NTD
 could assist in treating cancer; for example, the antibiotic
 geldanamycin and its analogs are under investigation as possible
-anti-tumor agents.~\cite{Stebbins1997,Hermane2019}
+anti-tumor agents~\cite{Stebbins1997,Hermane2019}.
 
-In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238.~\cite{ligand_resorcinol} As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
+In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238~\cite{ligand_resorcinol}. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{hsp90lig}
@@ -361,14 +361,14 @@ In the structure which will be examined during this tutorial, the ligand of conc
 
 \hypertarget{methods}{%
 \section*{Methods: Simulation}\label{methods}}
-In this section we will take the reader through the step-by-step process required to prepare, run and analyse Hsp90. A brief explanation of the theory and purpose of each step is provided. Refer to the hands-on sections as these describe the task with tools and parameters to be carried out using Galaxy. 
+In this section we will take the reader through the step-by-step process required to prepare, run and analyze Hsp90. A brief explanation of the theory and purpose of each step is provided. Refer to the hands-on sections as these describe the task with tools and parameters to be carried out using Galaxy. 
 
 %\hypertarget{simulation}{%
 %\subsection*{Simulation}\label{simulation}}
 
 \subsection*{Get data}\label{get-data}
 
-As a first step, we download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a ligand belonging to the resorcinol class.
+As a first step, we create a new Galaxy history and then we download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a ligand belonging to the resorcinol class.
 
 \begin{handson_box_colour}{Data upload}
 %\textbf{Hands-on: Data upload}
@@ -397,10 +397,9 @@ attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
-The PDB file we start from only explicitly states atom type (i.e. carbon, oxygen, and so on) and
+The PDB file we start from only explicitly states atom element (i.e. carbon, oxygen, and so on) and
 3D Cartesian coordinates of each atom; additionally, it will usually not include hydrogen atoms. Therefore, before beginning simulation, we need to calculate
-the rest of the information contained within the topology file. There
-are a range of force fields to perform these calculations (for a recent, accessible overview see ~\cite{Lemkul2020}).
+the rest of the information contained within the topology file.
 
 % perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
 
@@ -470,7 +469,7 @@ use the \textbf{GROMACS initial setup} tool.
   \item
     \emph{``PDB input file''}: `Protein (PDB)' file
   \item
-    \emph{``Force field''}: \texttt{gaff}
+    \emph{``Force field''}: \texttt{AMBER99SB}
   \item
     \emph{``Water model''}: \texttt{TIP3P}
   \item
@@ -479,9 +478,9 @@ use the \textbf{GROMACS initial setup} tool.
 % \end{enumerate}
 \end{handson_box_colour}
 
-A force field is essentially a function to calculate the potential energy of a system, based on various empirical parameters (for the atoms, bonds, charges, dihedral angles and so on). There are a number of families of forcefields; some of the most commonly used include CHARMM~\cite{Vanommeslaeghe2009}, AMBER~\cite{Maier2015}, GROMOS~\cite{reif2012} and OpenFF~\cite{Mobley2018}. We will use \texttt{ff14SB}, which is the main AMBER forcefield for protein modelling.
+A force field is essentially a function to calculate the potential energy of a system, based on various empirical parameters (for the atoms, bonds, charges, dihedral angles and so on). There are a number of families of force fields; some of the most commonly used include CHARMM~\cite{Vanommeslaeghe2009}, AMBER~\cite{Maier2015}, GROMOS~\cite{reif2012} and OpenFF~\cite{Mobley2018} (for a recent, accessible overview see ~\cite{Lemkul2020}). We will use \texttt{ff99SB}, which is one of the main AMBER force fields for protein modeling.
 
-Apart from the force field, a water model also needs to be selected to model the solvent; a wide range of models exist for this purpose. Here we are using the common TIP3P model, which is an example of a `three-site model' - so-called because the molecule is modeled using three points, corresponding to the three atoms of water. (Four- and five-site models include additional `dummy atoms' representing the negative charges of the lone pairs of the oxygen atom)~\cite{Onufriev2017}.
+Apart from the force field, a water model also needs to be selected to model the solvent; a wide range of models exist for this purpose. Here we are using the common TIP3P model, which is an example of a `three-site model' - so-called because the molecule is modeled using three points, corresponding to the three atoms of water (Four- and five-site models include additional `dummy atoms' representing the negative charges of the lone pairs of the oxygen atom)~\cite{Onufriev2017}.
 
 The tool produces four outputs: a GRO file (containing the coordinates
 of the protein), a TOP file (containing other information, including
@@ -495,7 +494,7 @@ debugging if we encounter any problems.
 \subsection*{Generate a topology for the
 ligand}\label{generate-a-topology-for-the-ligand}
 
-To generate a topology for the ligand, we will use the \textbf{acpype}
+To generate a topology for the ligand, we will use the \textbf{acpype}~\cite{SousadaSilva2012}
 tool. This provides a convenient interface to the AmberTools suite and
 allows us to easily create the ligand topology in the format required by
 GROMACS.
@@ -528,7 +527,7 @@ GROMACS.
 
 \end{handson_box_colour}
 
-Here, we use GAFF (general AMBER force field), which is a generalized AMBER force field~\cite{Wang2004} which can be applied to almost any small organic molecule, not just macromolecules such as proteins.
+Here, we use GAFF (general AMBER force field), which is a generalized AMBER force field~\cite{Wang2004} which can be applied to almost any small organic molecule.
 
 We select charge and multiplicity as appropriate. The ligand studied here is neutral, so the charge is 0. The multiplicity is 1, which will be the case for every simple organic molecule we encounter; only if we deal with more exotic species such as metal complexes or carbenes will we need to consider higher values.
 
@@ -616,7 +615,7 @@ situated.
 This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose: we select triclinic, as it provides the most efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent. 
 
 \subsection*{Solvation}\label{solvation}
-The next step is solvation of the newly created simulation box. Note
+The next step is solvation of the newly created simulation box - as we are simulating under biological conditions, we use water as the solvent. Note
 that the system is charged (depending on the pH) - the solvation tool
 also adds sodium or chloride ions (replacing existing water molecules) as required to neutralize this.
 
@@ -633,8 +632,8 @@ also adds sodium or chloride ions (replacing existing water molecules) as requir
   \begin{itemize}
   \tightlist
   \item
-    \emph{``GRO structure file''}: \texttt{output} (output of
-    \textbf{GROMACS structure configuration} )
+    \emph{``GRO structure file''}: output of
+    \textbf{GROMACS structure configuration}
   \item
     \emph{``System topology''}: \texttt{output}
   \item
@@ -662,11 +661,11 @@ After the solvation step, parameterization of the system is complete and prepara
   \begin{itemize}
   \tightlist
   \item
-    \emph{``GRO structure file.''}: \texttt{output1} (output of
-    \textbf{GROMACS solvation and adding ions} )
+    \emph{``GRO structure file.''}: GRO output of
+    \textbf{GROMACS solvation and adding ions}
   \item
-    \emph{``Topology (TOP) file.''}: \texttt{output2} (output of
-    \textbf{GROMACS solvation and adding ions} )
+    \emph{``Topology (TOP) file.''}: TOP output of
+    \textbf{GROMACS solvation and adding ions}
   \item
     \emph{``Parameter input''}:
     \texttt{Use\ default\ (partially\ customisable)\ setting}
@@ -738,9 +737,9 @@ The resulting plot should resemble Figure \ref{fig:empot}. The system first drop
 
 \subsection*{Equilibration}\label{equilibration}
 
-At this point equilibration of the solvent around the solute (i.e. the protein) is necessary. This is performed in two stages: equilibration under an NVT (or isothermal-isochoric ensemble) ensemble, followed by an NPT (or isothermal-isobaric ensemble) ensemble. Use of the NVT ensemble entails maintaining constant number of particles, volume and temperature, while the NPT ensemble maintains constant number of particles, pressure and temperature.
+At this point equilibration of the solvent around the solute (i.e. the protein) is necessary. This is performed in two stages: equilibration under an NVT (or isothermal-isochoric) ensemble, followed by an NPT (or isothermal-isobaric) ensemble. Use of the NVT ensemble entails maintaining constant number of particles, volume and temperature, while the NPT ensemble maintains constant number of particles, pressure and temperature.
 
-For equilibration, the protein must be held in place while the solvent is allowed to move freely around it. This is achieved using the position restraint file (ITP) we created in system setup. When we specify this restraint, protein movement is not totally forbidden, but is energetically punished.
+For equilibration, the protein must be held in place while the solvent is allowed to move freely around it. This is achieved using the position restraint file (ITP) we created in system setup. When we specify this restraint, protein movement is not forbidden, but is energetically penalized.
 
 \begin{handson_box_colour}{NVT
 equilibration}
@@ -914,7 +913,7 @@ After the NPT equilibration is complete, \textbf{Extract energy components} can 
 
 \subsection*{Production simulation}\label{production-simulation}
 
-We can now remove the restraints and continue with the production simulation. The simulation will run for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short compared to the state-of-the-art, but sufficient for the purposes of a tutorial. The same tool can be used to extend the existing simulation.
+We can now remove the restraints and continue with the production simulation. The simulation will run for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short compared to the state-of-the-art, but sufficient for the purposes of a tutorial. For longer-scale simulations, the tool can be used multiple times (with the checkpoint file) to continue the existing simulation.
 
 \begin{handson_box_colour}{Main simulation}
 
@@ -999,7 +998,7 @@ An analysis of the GROMACS simulation outputs (structure and trajectory file) wi
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
 \subsection*{Convert coordinate and trajectory formats}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
-Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in CHARMM's DCD format. This tool can also be used to interconvert between several other trajectory formats.
+Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in DCD format. This tool can also be used to interconvert between several other trajectory formats.
 
 \begin{handson_box_colour}{Convert coordinate and trajectory formats}
 \begin{enumerate}
@@ -1049,9 +1048,9 @@ The Root Mean Square Deviation (RMSD) and Root Mean Square Fluctuation (RMSF) ar
 RMSD is a standard measure of structural distance between coordinate
 sets that measures the average distance between a group of atoms. The
 RMSD of the C$\alpha$ atoms of the protein backbone is calculated here and
-is a measure of how much the protein conformation has changed between different time points in the trajectory. Note that if protein-protein interactions were being studied, we would need to use a more focused selection to distinguish the C$\alpha$ atoms of the different chains.
+is a measure of how much the protein conformation has changed between different time points in the trajectory. Note that for more complex systems, you may need to consider a more focused selection.
 
-For the RMSD analysis of the ligand, the `Select domains' parameter of the tool can for convenience be set to `Ligand'; however, this automatic selection sometimes fails. The other alternative, which we apply here, is tp specify the `Residue ID' in the textbox provided. In this example the ligand's Residue ID is `G5E'. The output is the requested RMSD data as a time series, the RMSD plotted as a time series and as a histogram (for example, see Figure \ref{fig:rmsdprotein} in the results section).
+For the RMSD analysis of the ligand, the `Select domains' parameter of the tool can for convenience be set to `Ligand'; however, this automatic selection sometimes fails. The other alternative, which we apply here, is to specify the `Residue ID' in the textbox provided. In this example the ligand's Residue ID is `G5E'. The output is the requested RMSD data as a time series, the RMSD plotted as a time series and as a histogram (for example, see Figure \ref{fig:rmsdprotein} in the results section).
 
 \begin{handson_box_colour}{RMSD Analysis: protein}
 %\hypertarget{hands-on-task-description-9}{%
@@ -1066,11 +1065,11 @@ For the RMSD analysis of the ligand, the `Select domains' parameter of the tool 
   \begin{itemize}
   \tightlist
     \item
-    \emph{``DCD trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB input''}: output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
@@ -1115,11 +1114,12 @@ For the RMSD analysis of the ligand, the `Select domains' parameter of the tool 
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB input''}:
+    output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Select domains''}: \texttt{Residue\ ID}
 
@@ -1140,7 +1140,7 @@ For the RMSD analysis of the ligand, the `Select domains' parameter of the tool 
 \hypertarget{rmsf-analysis}{%
 \subsection*{RMSF analysis}\label{rmsf-analysis}}
 
-The Root Mean Square Fluctuation (RMSF) is valuable to consider, as it represents the deviation at a reference position over time. The fluctuation in space of particular amino acids in the protein are considered. The C$\alpha$ of the protein, designated by C-alpha, is a good selection to understand the change in protein structure. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectroscopy~\cite{berjanskii_nmr_2006,kuzmanic_determination_2010}. The output from the tools is the requested RMSF data and the RMSF plotted as a time series (for example, see Figure \ref{fig:rmsf} in the results section).
+The Root Mean Square Fluctuation (RMSF) is valuable to consider, as it represents the deviation at a reference position over time. The fluctuation in space of particular amino acids in the protein are considered. The C$\alpha$ of the protein, designated by \texttt{C-alpha}, is a good selection to understand the change in protein structure. Depending on the system these fluctuations can be correlated to experimental techniques including Nuclear Magnetic Resonance (NMR) and M\"{o}ssbauer spectroscopy~\cite{berjanskii_nmr_2006,kuzmanic_determination_2010}. The output from the tools is the requested RMSF data and the RMSF plotted as a time series (for example, see Figure \ref{fig:rmsf} in the results section).
 
 \begin{handson_box_colour}{RMSF Analysis}
 
@@ -1158,11 +1158,12 @@ The Root Mean Square Fluctuation (RMSF) is valuable to consider, as it represent
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB input''}:
+    output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
@@ -1180,7 +1181,7 @@ Principal component analysis (PCA) converts a set of correlated
 observations (movement of selected atoms in protein) to a set of principal
 components (PCs) which are linearly independent (or uncorrelated). Here several related tools are used. 
 The PCA tool calculates the PCA in order to determine the relationship between statistically meaningful conformations (major global motions) sampled during the trajectory. The C$\alpha$ carbons of the protein backbone are again a good selection for this purpose.  Outputs include the PCA raw data and figures of the relevant principal components (PCs) as well as an eigenvalue rank plot (see Figure \ref{fig:pca}) which is used to visualize the proportion of variance due to each principal component (remembering that the PCs are ranked eigenvectors based on the variance). 
-Having discovered the principal components usually these are visualized. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD~\cite{hump_vmd_1996} or NGL viewer~\cite{Rose2018ngl}. The PCA cosine content when close to 1 indicates that the simulation is not converged and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
+Having discovered the principal components usually these are visualized. The PCA visualization tool will create trajectories of specific principal components which can be viewed in a molecular viewer such as VMD~\cite{hump_vmd_1996} or NGL viewer~\cite{Rose2018ngl}. We also consider the PCA cosine content which when close to 1 indicates that the simulation is not converged and a longer simulation is needed. For values below 0.7, no statement can be made about convergence or lack thereof. 
 
 
 \begin{handson_box_colour}{PCA with BIO3D}
@@ -1198,11 +1199,11 @@ Having discovered the principal components usually these are visualized. The PCA
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB input''}: output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
@@ -1224,11 +1225,11 @@ Having discovered the principal components usually these are visualized. The PCA
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB input''}: output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Select domains''}: \texttt{C-alpha}
   \end{itemize}
@@ -1250,11 +1251,11 @@ Having discovered the principal components usually these are visualized. The PCA
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD/XTC trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD/XTC trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB/GRO input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB/GRO input''}: output of \textbf{GROMACS
+    structure configuration}
   \end{itemize}
 
 
@@ -1285,11 +1286,11 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
   \begin{itemize}
   \tightlist
   \item
-    \emph{``DCD/XTC trajectory input''}: \texttt{output} (output of
-    \textbf{MDTraj file converter} )
+    \emph{``DCD/XTC trajectory input''}: output of
+    \textbf{MDTraj file converter}
   \item
-    \emph{``PDB/GRO input''}: \texttt{output} (output of \textbf{GROMACS
-    structure configuration} )
+    \emph{``PDB/GRO input''}: output of \textbf{GROMACS
+    structure configuration}
   \item
     \emph{``Selection 1''}: \texttt{protein}
   \item
@@ -1306,10 +1307,12 @@ Hydrogen bonding interactions contribute to binding and are worth investigating,
 
 \hypertarget{resultsanddiscussion}{%
 \section*{Results and Discussion}\label{resultsanddiscussion}}
-After the completion of the simulation, the following questions arise: 1) is the simulation converged enough, and 2) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range; these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. The PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not fully converged. This is expected due to the short simulation length. For production level simulations, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds. As this tutorial is designed to be carried out on public webservers, we limit simulations to 1 ns, as we cannot provide a large amount of computational resources for training purposes. 
+After the completion of the simulation, the following questions arise: 1) is the simulation converged enough, and 2) what interesting molecular properties are observed. The timescale of motions of interest are in the picosecond to nanosecond range; these are motions such as domain vibration, hydrogen bond breaking, translation diffusion and side chain fluctuations. To observe meaningful conformational transitions of the protein $\mu$s sampling would be needed, but this is not the purpose here. 
+
+The PCA cosine content of the dominant motion related to PC1 is 0.93, indicating that the simulation is not fully converged. This is expected due to the short simulation length. For production level simulations, it is the norm to extend simulations to hundreds of nanoseconds in length, if not microseconds. As this tutorial is designed to be carried out on public webservers, we limit simulations to 1 ns, as we cannot provide a large amount of computational resources for training purposes. 
 
 \subsection*{RMSD protein}
-The RMSD time series for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs in Galaxy.
+The RMSD time series for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs.
 
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
@@ -1337,21 +1340,22 @@ In our case the ligand is stable with a single binding mode. The RMSD fluctuates
 
 
 \subsection*{RMSF}
-When considering the RMSF (Figure \ref{fig:rmsf}), fluctuations greater than 1.0{\AA} are of interest, for example see the fluctuations near residue positions 50, 110 and 160. These are actually residues 67, 127 and 167 as the first few residues of this protein are missing in the PDB and were not added using homology modeling in this tutorial. Specifically asp-66 pro-67 ser-68; ala-126 asp-127 ile-128; thr-175 thr-176 glu-178. Residue position 0 in the RMSF is actually position 17 in the Hsp90 FASTA primary sequence. This is a fairly common problem that can occur with molecular modeling of proteins where there may be missing residues at the beginning or within the sequence. It is important to double check and often the residue names are given for clarity. Very large fluctuations are seen for the C-terminus; this is common and no investigation is needed. The overall movement seen in the RMSF could be related to binding or other motions.
+When considering the RMSF (Figure \ref{fig:rmsf}), fluctuations greater than 1.0{\AA} are of interest; for example see the fluctuations near residue positions 50, 110 and 160.  Inspecting the structure with molecular visualization software such as VMD, these can be seen to correspond to flexible loop regions on the protein surface. In addition, very large fluctuations are seen for the C-terminus; this is common and no investigation is needed.
 
+Note that the first few residues of this protein are missing in the PDB, and therefore residue position 0 in the RMSF corresponds to position 17 in the Hsp90 FASTA primary sequence. This is a fairly common problem that can occur with molecular modeling of proteins, where there may be missing residues at the beginning or within the sequence.
 
 % possibly RMSF fig but not really needed
 \begin{figure}[ht!]
   \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsf}
   \caption{\csentence{RMSF for the protein.}
-      RMSF(\AA) vs the residue position. Large fluctuations occur for occur at various positions, which correspond to flexible loop regions on the surface of the protein.}
+      RMSF(\AA) vs the residue position. Large fluctuations occur at various positions, which correspond to flexible loop regions on the surface of the protein.}
 \label{fig:rmsf}
 \end{figure}
 %\includegraphics{images/htmd_analysis_rmsf.png}
 
 \subsection*{PCA}
 
-The first three principal components are responsible for 32.8\% of the total variance, as seen in the eigenvalue rank plot (Figure \ref{fig:pca}). The first principal component (PC1) accounts for 15.4\% of the variance (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). Visualization of PC1 using VMD~\cite{hump_vmd_1996} shows a rocking motion and wagging of the C-terminal.
+The first three principal components are responsible for 32.8\% of the total variance, as seen in the eigenvalue rank plot (Figure \ref{fig:pca}). The first principal component (PC1) accounts for 15.4\% of the variance (see PC1 vs PC2 and eigenvalue rank plots in Figure \ref{fig:pca}). Visualization of PC1 using VMD shows a rocking motion and wagging of the C-terminus.
 
 
 \begin{figure}[ht!]
@@ -1364,7 +1368,7 @@ The first three principal components are responsible for 32.8\% of the total var
 %\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
 \subsection*{Hydrogen bonding}
-The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond with the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
+The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent, meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond between the ligand and the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
 \section*{High throughput workflows}\label{optional-automating-high-throughput-calculations}}
@@ -1380,7 +1384,7 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Create a new history for running the high-throughput workflow and name it 'Hsp90 HTMD simulation'
+  Create a new history for running the high-throughput workflow and name it `Hsp90 HTMD simulation'
 
 \item
   Upload the SD-file containing the new ligand structures from Zenodo (LINK...) and rename it `Ligands (SDF)'
@@ -1395,15 +1399,15 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
     \emph{``SDF file with (docked) ligands''}: `Ligands (SDF)' file.
   \end{itemize}
 \item
-  Import the analysis workflow from the European~\cite{eu_htmd_analysis_workflow} or the South African Galaxy server~\cite{za_htmd_analysis_workflow}.
+  Import the analysis workflow from the European~\cite{eu_htmd_analysis_workflow} or the South African Galaxy server~\cite{za_htmd_analysis_workflow} (also available through Zenodo).
 \item
   Run the imported workflow with the following parameters:
   \begin{itemize}
   \tightlist
   \item
-    \emph{``Send results to a new history''}: 'Yes'
+    \emph{``Send results to a new history''}: `Yes'
   \item
-    \emph{``History name''}: 'Hsp90 HTMD analysis'
+    \emph{``History name''}: `Hsp90 HTMD analysis'
   \item
     \emph{``GRO input''}: Collection of GRO files produced by simulation workflow
   \item
@@ -1456,7 +1460,7 @@ for name, _id in ligands.items():
 \hypertarget{conclusion}{%
 \section*{Conclusion}\label{conclusion}}
 
-This tutorial provides a guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the pain from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary. Apart from streamlining the process for existing MD users, this tutorial should also prove useful as a pedagogical guide for educating students or newcomers to the field.
+This tutorial provides a guide on how to study protein-ligand interaction using molecular dynamics in Galaxy. Performing such analyses in Galaxy makes it straightforward to set up, schedule and run workflows, removing much of the difficulty from MD simulation. Thus, the technical barrier to performing high-throughput studies is greatly reduced. Results are structured in the form of Galaxy histories or collections, and include ready-plotted diagrams, which ensure data can be easily understood and reproduced if necessary. Apart from streamlining the process for existing MD users, this tutorial should also prove useful as a pedagogical guide for educating students or newcomers to the field.
 
 After completing the tutorial, the user will be familiar at a basic level with a range of MD analysis techniques, and understand the steps required for a typical MD simulation. Thus, they will be equipped to apply these tools to their own problems.
 

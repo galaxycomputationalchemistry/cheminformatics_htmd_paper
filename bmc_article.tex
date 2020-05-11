@@ -101,8 +101,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 % uncomment these to remove figures
-\def\includegraphic{}
-\def\includegraphics{}
+%\def\includegraphic{}
+%\def\includegraphics{}
 
 \providecommand{\tightlist}{%
   \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
@@ -353,7 +353,7 @@ anti-tumor agents~\cite{Stebbins1997,Hermane2019}.
 In the structure which will be examined during this tutorial, the ligand of concern is a resorcinol, a common class of compounds with affinity for the Hsp90 N-terminal domain. It is registered in the PubChem database under the compound ID 135508238~\cite{ligand_resorcinol}. As can be seen by viewing the PDB structure, the resorcinol part of the structure is embedded in the binding site, bound by a hydrogen bond to residue aspartate-93. The ligand structure also contains a triazole and a fluorophenyl ring, which lie nearer to the surface of the protein.
 
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{hsp90lig}
+  \includegraphics[width=0.4\textwidth]{hsp90lig}
     \caption{\csentence{Hsp90 cartoon view.}
     Hsp90 cartoon with ligands in active site, rendered using the Galaxy NGL plugin~\cite{Rose2018ngl}}
 \label{fig:Hsp90}
@@ -557,11 +557,11 @@ While we have separate topology and structure files for both protein and ligand,
   \item
     \emph{``Protein topology (TOP) file''}: \texttt{TOP} file created by the \textbf{GROMACS initial setup tool}
   \item
-    \emph{``Ligand topology (TOP or ITP) file''}: \texttt{Topology} file created by the \textbf{acpype}
+    \emph{``Ligand topology (TOP or ITP) file''}: \texttt{Topology} file created by the \textbf{acpype tool}
   \item
     \emph{``Protein structure (GRO) file''}: \texttt{GRO} file created by the \textbf{GROMACS initial setup tool}
   \item
-    \emph{``Ligand structure (GRO) file''}: \texttt{Structure file (GRO format)} file created by the \textbf{acpype}
+    \emph{``Ligand structure (GRO) file''}: \texttt{Structure file (GRO format)} file created by the \textbf{acpype tool}
 
   \end{itemize}
 % \end{enumerate}
@@ -718,6 +718,7 @@ we can use the `Extract energy components' tool to plot the convergence of the p
   \tightlist
   \item
     \emph{``Provide a label''}: \texttt{Energy potential}
+  \item
     \emph{``Values for x-axis''}: \texttt{Column: 1}
   \item
     \emph{``Values for y-axis''}: \texttt{Column: 2}
@@ -729,7 +730,7 @@ we can use the `Extract energy components' tool to plot the convergence of the p
 The resulting plot should resemble Figure \ref{fig:empot}. The system first drops rapidly in energy, before slowly converging on the minimized state.
 
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{em_potential}
+  \includegraphics[width=0.4\textwidth]{em_potential}
   \caption{\csentence{Energy potential}
        during the EM simulation.}
   \label{fig:empot}
@@ -817,7 +818,7 @@ equilibration}
 
 \end{handson_box_colour}
 
-Once the NVT equilibration is complete, it is worth using the \textbf{Extract energy components} tool again to check whether the system temperature has converged on 300 K. This can be done as described for energy minimization, this time specifying \texttt{Temperature} under \emph{Terms to calculate} rather \texttt{Potential}. The plot should show the temperature reaching 300 K and remaining there, albeit with some fluctuation.
+Once the NVT equilibration is complete, it is worth using the \textbf{Extract energy components} tool again to check whether the system temperature has converged on 300 K. This can be done as described for energy minimization, this time specifying \texttt{Temperature} under \emph{Terms to calculate} rather than \texttt{Potential}. The plot should show the temperature reaching 300 K and remaining there, albeit with some fluctuation.
 
 Having stabilized the temperature of the system with NVT equilibration,
 we also need to stabilize the pressure of the system. We therefore
@@ -909,7 +910,7 @@ equilibration}
 
 \end{handson_box_colour}
 
-After the NPT equilibration is complete, \textbf{Extract energy components} can be used again to view the pressure of the system. This is done as described for energy minimization, specifying \texttt{Pressure} under \emph{Terms to calculate}. The plot should show convergence on 1 bar and remaining there, although some fluctuation is expected.
+After the NPT equilibration is complete, \textbf{Extract energy components} can be used again to view the pressure of the system. This is done as described for energy minimization, specifying \texttt{Pressure} under \emph{Terms to calculate}. The plot should show convergence on 1 bar and remain there, although some fluctuation is expected.
 
 \subsection*{Production simulation}\label{production-simulation}
 
@@ -1315,13 +1316,13 @@ The PCA cosine content of the dominant motion related to PC1 is 0.93, indicating
 The RMSD time series for the protein shows a thermally stable and equilibrated structure that plateaus at 1.0{\AA} with an average RMSD between 0.8{\AA} and 1.0{\AA}. There are no large conformational changes during the simulation. The RMSD histogram confirms this, see Figure \ref{fig:rmsdprotein}. Note these graphs are automatically created by Galaxy as part of the tool's outputs.
 
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd1_merge}
   \caption{\csentence{RMSD for protein.}
       RMSD time series and histogram for the protein.}
   \label{fig:rmsdprotein}
 \end{figure}
-%%\includegraphics{images/htmd_analysis_rmsd1_series.png}
-%%\includegraphics{images/htmd_analysis_rmsd1_histo.png}
+%\includegraphics{images/htmd_analysis_rmsd1_series.png}
+%\includegraphics{images/htmd_analysis_rmsd1_histo.png}
 
 \subsection*{RMSD ligand}
 Calculating the RMSD of the ligand is necessary to check if it is stable in the active site and to identify possible binding modes. If the ligand is not stable, there will be large fluctuations in the RMSD.
@@ -1329,14 +1330,14 @@ Calculating the RMSD of the ligand is necessary to check if it is stable in the 
 In our case the ligand is stable with a single binding mode. The RMSD fluctuates around 0.3{\AA}, with a slight fluctuation near the end of the simulation. This is more clearly seen in the histogram, see Figure \ref{fig:rmsdligand}. The conformation seen during simulation is very similar to that in the crystal structure and the ligand is stable in the active site.
 
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_merge}
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsd2_merge}
   \caption{\csentence{RMSD for the ligand.}
       RMSD time series and histogram for the ligand.}
   \label{fig:rmsdligand}
 \end{figure}
-%%\includegraphics{images/htmd_analysis_rmsd2_series.png}
-%%\includegraphics{images/htmd_analysis_rmsd2_histo.png}
-%%\includegraphics{images/htmd_analysis_bindingposes.png}
+%\includegraphics{images/htmd_analysis_rmsd2_series.png}
+%\includegraphics{images/htmd_analysis_rmsd2_histo.png}
+%\includegraphics{images/htmd_analysis_bindingposes.png}
 
 
 \subsection*{RMSF}
@@ -1346,12 +1347,12 @@ Note that the first few residues of this protein are missing in the PDB, and the
 
 % possibly RMSF fig but not really needed
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{htmd_analysis_rmsf}
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_rmsf}
   \caption{\csentence{RMSF for the protein.}
       RMSF(\AA) vs the residue position. Large fluctuations occur at various positions, which correspond to flexible loop regions on the surface of the protein.}
 \label{fig:rmsf}
 \end{figure}
-%%\includegraphics{images/htmd_analysis_rmsf.png}
+%\includegraphics{images/htmd_analysis_rmsf.png}
 
 \subsection*{PCA}
 
@@ -1359,13 +1360,13 @@ The first three principal components are responsible for 32.8\% of the total var
 
 
 \begin{figure}[ht!]
-  %\includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
+  \includegraphics[width=0.4\textwidth]{htmd_analysis_pca}
   \caption{\csentence{Principal Component Analysis.}
       PCA results which include graphs of PC2 vs PC1, PC2 vs PC3, PC3 vs PC1  colored from blue to red in order of time, and an eigenvalue rank plot. In the eigenvalue plot the cumulative variance is labeled for each data point.}
  \label{fig:pca}
  \end{figure}
-%%\includegraphics{images/htmd_analysis_pca.png}
-%%\includegraphics{images/htmd_analysis_pc1_rmsf.png}
+%\includegraphics{images/htmd_analysis_pca.png}
+%\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
 \subsection*{Hydrogen bonding}
 The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent, meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond between the ligand and the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
@@ -1387,7 +1388,7 @@ We will demonstrate the high-throughput capabilities of Galaxy by running the wo
   Create a new history for running the high-throughput workflow and name it `Hsp90 HTMD simulation'
 
 \item
-  Upload the SD-file containing the new ligand structures from Zenodo (LINK...) and rename it `Ligands (SDF)'
+  Upload the SD-file containing the new ligand structures from Zenodo~\cite{zenodo_sm_2020} and rename it `Ligands (SDF)'
 \item
   Import the simulation workflow from the European~\cite{eu_htmd_simulation_workflow} or the South African Galaxy server~\cite{za_htmd_simulation_workflow}.
 \item

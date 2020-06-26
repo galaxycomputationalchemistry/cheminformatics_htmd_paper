@@ -323,7 +323,7 @@ Molecular dynamics (MD) is a method to simulate molecular motion by
 iterative application of Newton's laws of motion. It is often applied to
 large biomolecules such as proteins or nucleic acids. A common
 application is to assess the interaction between these macromolecules
-and a number of small molecules (e.g.~potential drug candidates). This
+and a number of small molecules (e.g. potential drug candidates). This
 tutorial provides a guide to setting up and running a high-throughput
 workflow for screening multiple small molecules, using the open-source
 GROMACS tools provided through the Galaxy platform. Following simulation, the trajectory data is analyzed using a range of tools to investigate structural properties and correlations over time.
@@ -506,9 +506,26 @@ GROMACS.
 % \def\labelenumi{\arabic{enumi}.}
 % \tightlist
 % \item
-  \textbf{Generate MD topologies for small molecules} with the following
-  parameters:
+\begin{enumerate}
+\def\labelenumi{\arabic{enumi}.}
+\tightlist
+\item
+  \textbf{Compound conversion}:
 
+  \begin{itemize}
+  \tightlist
+  \item
+    \emph{``Molecular input file''}: `Ligand (PDB)'
+  \item
+    \emph{``Output format''}: \texttt{Protein Data Bank format (pdb)}
+  \item
+    \emph{``Add hydrogens appropriate for pH''}: \texttt{7.0}
+  \end{itemize}
+\item  
+  Rename the output file to ´Hydrated ligand (PDB)'
+
+\item
+  \textbf{Generate MD topologies for small molecules}:
   \begin{itemize}
   \tightlist
   \item
@@ -523,7 +540,7 @@ GROMACS.
   \item
     \emph{``Save GRO file?''}: \texttt{Yes}
   \end{itemize}
-% \end{enumerate}
+\end{enumerate}
 
 \end{handson_box_colour}
 

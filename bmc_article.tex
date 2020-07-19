@@ -397,8 +397,7 @@ attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
-The PDB file we start from only explicitly states atom element (i.e. carbon, oxygen, and so on) and
-3D Cartesian coordinates of each atom; additionally, it will usually not include hydrogen atoms. Therefore, before beginning simulation, we need to calculate
+The PDB file does not include parameters for simulations nor the position of hydrogen atoms. Therefore, before beginning simulation, we need to calculate
 the rest of the information contained within the topology file.
 
 % perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
@@ -486,9 +485,9 @@ The tool produces four outputs: a GRO file (containing the coordinates
 of the protein), a TOP file (containing other information, including
 charges, masses, bonds and angles), an ITP file (which will be used to
 restrain the protein position in the equilibration step later on), and a
-log for the tool.
+log file.
 
-Please note all the GROMACS tools provided in Galaxy output a log. These provide useful information for
+Please note all the GROMACS tools provided in Galaxy output a log file. These provide useful information for
 debugging if we encounter any problems.
 
 \subsection*{Generate a topology for the
@@ -1016,7 +1015,7 @@ An analysis of the GROMACS simulation outputs (structure and trajectory file) wi
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
 \subsection*{Convert coordinate and trajectory formats}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
-Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in DCD format. This tool can also be used to interconvert between several other trajectory formats.
+Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format using the ‘editconf’ GROMACS tool called ‘Convert coordinate and trajectory formats’ in Galaxy. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in DCD format. This tool can also be used to interconvert between several other trajectory formats.
 
 \begin{handson_box_colour}{Convert coordinate and trajectory formats}
 \begin{enumerate}

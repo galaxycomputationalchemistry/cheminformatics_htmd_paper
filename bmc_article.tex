@@ -85,6 +85,8 @@
 \usepackage{minted}
 \usepackage{hyperref} %<--- Load after everything else
 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%                                             %%
 %%  If you wish to display your graphics for   %%
@@ -476,7 +478,7 @@ The topology for the protein file is calculated with the \textbf{GROMACS initial
 
 A force field is essentially a function to calculate the potential energy of a system, based on various empirical parameters (for the atoms, bonds, charges, dihedral angles and so on). There are a number of families of force fields; some of the most commonly used include CHARMM~\cite{Vanommeslaeghe2009}, AMBER~\cite{Maier2015}, GROMOS~\cite{reif2012} and OpenFF~\cite{Mobley2018} (for a recent, accessible overview see ~\cite{Lemkul2020}). One of the main AMBER force fields for protein modeling, \texttt{ff99SB}, was selected.
 
-Apart from the force field, a water model also needs to be selected to model the solvent; a wide range of models exist for this purpose. The common TIP3P model is selected, which is an example of a `three-site model' - so-called because the molecule is modeled using three points, corresponding to the three atoms of water (four- and five-site models include additional `dummy atoms' representing the negative charges of the lone pairs of the oxygen atom)~\cite{Onufriev2017}.
+Apart from the force field, a water model is selected to model the solvent; a wide range of models exist for this purpose. The common TIP3P model is selected, which is an example of a `three-site model' - so-called because the molecule is modeled using three points, corresponding to the three atoms of water (four- and five-site models include additional `dummy atoms' representing the negative charges of the lone pairs of the oxygen atom)~\cite{Onufriev2017}.
 
 The tool produces four outputs: a GRO file (containing the coordinates
 of the protein), a TOP file (containing other information, including
@@ -493,7 +495,7 @@ ligand}\label{generate-a-topology-for-the-ligand}
 The acpype~\cite{SousadaSilva2012} tool is used to generate a topology for the ligand. This provides a convenient interface to the AmberTools suite and creates the ligand topology in the format required by
 GROMACS.
 
-Inspecting the contents of the ligand PDB file shows that it contains no hydrogen atoms. These need to be added before the topology can be calculated. The Compound conversion tool (based on OpenBabel~\cite{OBoyle2011}) can be used to achieve this.
+Inspecting the contents of the ligand PDB file shows that it contains no hydrogen atoms. Hydrogens were added to the topology using the Compound conversion tool (based on OpenBabel~\cite{OBoyle2011}).
 
 \begin{handson_box_colour}{Generate ligand topology}
 %\textbf{Hands-on: Generate ligand topology}\label{hands-on-task-description-2}
@@ -621,7 +623,7 @@ situated.
 
 \end{handson_box_colour}
 
-This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose: triclinic is selected, as it provides the most efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent. 
+This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose from: triclinic is selected, as it provides the most efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent. 
 
 \subsection*{Solvation}\label{solvation}
 The next step is solvation of the newly created simulation box. Water was chosen as a solvent to in order to simulate biological conditions. Note

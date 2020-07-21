@@ -309,7 +309,7 @@ ligands to the Hsp90 protein.
 
 Molecular dynamics (MD) is a commonly used method in computational chemistry and cheminformatics, in particular for studying the interactions between small molecules and large biological macromolecules such as proteins~\cite{berendsen01}. However, the barrier to entry for MD simulation is high; not only is the theory difficult to master, but commonly used MD software is technically demanding. Furthermore, generating reliable, reproducible simulation data requires the user to maintain detailed records of all parameters and files used, which again poses a challenge to newcomers to the field. One solution to the latter problem is usage of a workflow management system such as Galaxy~\cite{afgan_galaxy_2018}, which provides a selection of tools for molecular dynamics simulation and analysis~\cite{senapathi_biomolecular_2019}. MD simulations are rarely performed singly; in recent years, the concept of high-throughput molecular dynamics (HTMD) has come to the fore~\cite{HARVEY20121059,Guterres2020}. Galaxy lends itself well to this kind of study, as we will demonstrate in this paper, thanks to features allowing construction of complex workflows, which can then be executed on multiple inputs in parallel.
 
-This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy~\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details. Galaxy makes high-throughput data analysis a structured, reproducible and transparent process. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform. The aim is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015,Lemkul2019} engine), to analysis of the results.
+This tutorial provides a detailed workflow for high-throughput molecular dynamics with Galaxy, using the N-terminal domain (NTD) of Hsp90 (heat shock protein 90) as a case-study. Galaxy~\cite{afgan_galaxy_2018} is a data analysis platform that provides access to thousands of tools for scientific computation. It features a web-based user interface while automatically and transparently managing underlying computation details, enabling structured and reproducible high-throughput data analysis. This tutorial provides sample data, workflows, hands-on material and references for further reading. It presumes that the user has a basic understanding of the Galaxy platform. The aim is to guide the user through the various steps of a molecular dynamics study, from accessing publicly available crystal structures, to performing MD simulation (leveraging the popular GROMACS~\cite{abraham_gromacs_2015,Lemkul2019} engine), to analysis of the results.
 
 The entire analysis described in this article can be conducted efficiently on any Galaxy server which has the needed tools. In particular, we recommend using the Galaxy Europe server
 (\url{https://cheminformatics.usegalaxy.eu}) or the Galaxy South Africa server (\url{https://galaxy-compchem.ilifu.ac.za}).
@@ -318,7 +318,6 @@ The tutorial presented in this article has been developed as part of the Galaxy 
 
 \subsection*{What is high-throughput molecular
 dynamics?}\label{what-is-high-throughput-molecular-dynamics}
-
 Molecular dynamics (MD) is a method to simulate molecular motion by
 iterative application of Newton's laws of motion. It is often applied to
 large biomolecules such as proteins or nucleic acids. A common
@@ -361,14 +360,14 @@ In the structure which will be examined during this tutorial, the ligand of conc
 
 \hypertarget{methods}{%
 \section*{Methods: Simulation}\label{methods}}
-In this section we will guide the reader through the step-by-step process required to prepare, run and analyze Hsp90. A brief explanation of the theory and purpose of each step is provided. Refer to the hands-on sections as these describe the task with tools and parameters to be carried out using Galaxy. 
+This section guides the reader through the step-by-step process required to prepare, run and analyze Hsp90. A brief explanation of the theory and purpose of each step is provided. Refer to the hands-on sections as these describe the task with tools and parameters to be carried out using Galaxy. 
 
 %\hypertarget{simulation}{%
 %\subsection*{Simulation}\label{simulation}}
 
 \subsection*{Get data}\label{get-data}
 
-Create a new Galaxy history and then download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a ligand belonging to the resorcinol class.
+Create a new Galaxy history and then download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a the resorcinol ligand.
 
 \begin{handson_box_colour}{Data upload}
 %\textbf{Hands-on: Data upload}
@@ -397,14 +396,14 @@ attributes (attributes that can change during a simulation, e.g. atom
 position, velocities and forces) are stored in structure (PDB or GRO)
 and trajectory (XTC and TRR) files.
 
-The PDB file does not include parameters for simulations nor the position of hydrogen atoms. Therefore, before beginning simulation, the rest of this information must be calculated and added to a topology file.
+The PDB file includes neither parameters for simulations, nor the positions of hydrogen atoms. Therefore, before beginning simulation, this information must be calculated and added to a topology file.
 
 % perhaps some more discussion here and a citation of https://www.sciencedirect.com/science/article/pii/S1877117319302157
 
 \subsection*{Extract protein and ligand
 coordinates}\label{extract-protein-and-ligand-coordinates}
 
-Parameterization is done separately for the ligand and protein.
+Parameterization is performed separately for the ligand and protein.
 The PDB file is separated into two sets of
 coordinates - one for the ligand and one for the protein - using the simple text manipulation tools integrated into Galaxy.
 
@@ -482,7 +481,7 @@ Apart from the force field, a water model also needs to be selected to model the
 The tool produces four outputs: a GRO file (containing the coordinates
 of the protein), a TOP file (containing other information, including
 charges, masses, bonds and angles), an ITP file (which will be used to
-restrain the protein position in the equilibration step later on), and a
+restrain the protein position in the equilibration steps later on), and a
 log file.
 
 Please note all the GROMACS tools provided in Galaxy output a log file. These provide useful information for
@@ -543,7 +542,7 @@ Inspecting the contents of the ligand PDB file shows that it contains no hydroge
 
 The GAFF (general AMBER force field) is selected, which is a generalized AMBER force field~\cite{Wang2004} which can be applied to almost any small organic molecule.
 
-Appropriate charge and multiplicity parameters are entered. The ligand studied is a simple organic molecule, with no charge. The charge is 0 and the multiplicity is 1. Alternative charge and multiplicity need only be considered for more exotic species such as metal complexes or carbenes.
+Appropriate charge and multiplicity parameters are entered. The ligand studied is a simple organic molecule, with no charge; therefore, the charge is set to 0 and the multiplicity to 1. Alternative values for multiplicity need only be considered for more exotic species such as metal complexes or carbenes.
 
 %\subsection*{Solvation and energy minimization}\label{solvation-and-energy-minimization}
 
@@ -580,9 +579,9 @@ The separate topology and structure files for both protein and ligand are combin
 
 \end{handson_box_colour}
 
+Note that, apart from this tool, the Galaxy platform also provides an integrated text editor for making more advanced changes to GROMACS topologies or configuration files.
 
-\subsection*{\texorpdfstring{Create the simulation box with
-}{Create the simulation box}}\label{create-the-simulation-box-with-gromacs-structure-configuration}
+\subsection*{\texorpdfstring{Create the simulation box}{Create the simulation box}}\label{create-the-simulation-box-with-gromacs-structure-configuration}
 
 The next step, once combined coordinate (GRO) and topology (TOP) files
 have been created, is to create a simulation box in which the system is
@@ -825,7 +824,7 @@ equilibration}
 
 \end{handson_box_colour}
 
-Once the NVT equilibration is complete, it is worth using the \textbf{Extract energy components} tool again to check whether the system temperature has converged on 300 K. This can be done as described for energy minimization, this time specifying \texttt{Temperature} under \emph{Terms to calculate} rather than \texttt{Potential}. The plot should show the temperature reaching 300 K and remaining there, albeit with some fluctuation.
+Once the NVT equilibration is complete, it is worth using the `Extract energy components' tool again to check whether the system temperature has converged on 300 K. This can be done as described for energy minimization, this time specifying \texttt{Temperature} under \emph{Terms to calculate} rather than \texttt{Potential}. The plot should show the temperature reaching 300 K and remaining there, albeit with some fluctuation.
 
 Having stabilized the temperature of the system with NVT equilibration, the pressure is stabilized by equilibrating using the NPT (constant number of particles, pressure,
 temperature) ensemble. The NPT simulation is continued from the NVT simulation by using the checkpoint (CPT) file saved at the end of the NVT simulation.
@@ -911,11 +910,11 @@ equilibration}
 
 \end{handson_box_colour}
 
-After the NPT equilibration is complete, \textbf{Extract energy components} can be used again to view the pressure of the system. This is done as described for energy minimization, specifying \texttt{Pressure} under \emph{Terms to calculate}. The plot should show convergence on 1 bar and remain there, although some fluctuation is expected.
+After the NPT equilibration is complete, `Extract energy components' can be used again to view the pressure of the system. This is done as described for energy minimization, specifying \texttt{Pressure} under \emph{Terms to calculate}. The plot should show convergence on 1 bar and remain there, although some fluctuation is expected.
 
 \subsection*{Production simulation}\label{production-simulation}
 
-The restraints are removed and a production simulation is carried out for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short compared to the state-of-the-art, but sufficient for the purposes of a tutorial. For longer-scale simulations, the tool can be used multiple times (with the checkpoint file) to continue the existing simulation.
+The restraints are removed and a production simulation is carried out for 1 million steps, with a step size of 1 fs, so will have a total length of 1 ns. This is rather short compared to the state-of-the-art, but sufficient for the purposes of a tutorial.
 
 \begin{handson_box_colour}{Main simulation}
 
@@ -1000,7 +999,7 @@ An analysis of the GROMACS simulation outputs (structure and trajectory file) wi
 \hypertarget{create-pdb-file-needed-by-most-analysis-tools}{%
 \subsection*{Convert coordinate and trajectory formats}\label{create-pdb-file-needed-by-most-analysis-tools}}
 
-Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format using the ‘editconf’ GROMACS tool called ‘Convert coordinate and trajectory formats’ in Galaxy. This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in DCD format. This tool can also be used to interconvert between several other trajectory formats.
+Before beginning a detailed analysis, the structure and trajectory files generated previously need to be converted into different formats. First, convert the structural coordinates of the system in GRO format into PDB format using the ‘Convert coordinate and trajectory formats’ tool (which is based on the ‘editconf’ GROMACS command). This PDB file will be used by most analysis tools as a starting structure. This tool can also be used to carry out initial setup (as discussed in the simulation methods section) for GROMACS simulations and to convert from PDB to GRO format. Next, convert the trajectory from XTC to DCD format, as a number of tools (particularly those based on Bio3D) only accept trajectories in DCD format. This tool can also be used to interconvert between several other trajectory formats.
 
 \begin{handson_box_colour}{Convert coordinate and trajectory formats}
 \begin{enumerate}
@@ -1370,7 +1369,7 @@ The first three principal components are responsible for 32.8\% of the total var
 %\includegraphics{images/htmd_analysis_pc1_rmsf.png}
 
 \subsection*{Hydrogen bonding}
-The active site of this protein is quite hydrophobic, yet multiple hydrogen bonds were identified. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent, meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond between the ligand and the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
+Multiple hydrogen bonds were identified between the active site of the protein and the ligand. The hydrogen bond between aspartate-93 and the ligand (as identified in the crystal structure) was found to be persistent, meeting the hydrogen bond criteria for 89.22\% of the simulation. A hydrogen bond between the ligand and the carbonyl group of glycine-97 was found to have a 15.27\% occupancy. Hydrogen bonding interactions with threonine-184, asparagine-51 and lysine-58 were also observed but these are not persistent and only present for a minority of the simulation. These values can be accessed from the 'Percentage occupancy of the H-bond' output of the hydrogen bond analysis tool. 
 
 \hypertarget{optional-automating-high-throughput-calculations}{%
 \section*{High throughput workflows}\label{optional-automating-high-throughput-calculations}}
@@ -1386,10 +1385,10 @@ The high-throughput capabilities of Galaxy are demonstrated by running the workf
 \def\labelenumi{\arabic{enumi}.}
 \tightlist
 \item
-  Create a new history for running the high-throughput workflow and name it `Hsp90 HTMD simulation'
+  Create a new history for running the high-throughput workflow and name it `Hsp90 HTMD simulation'.
 
 \item
-  Upload the SD-file containing the new ligand structures from Zenodo~\cite{zenodo_sm_2020} and rename it `Ligands (SDF)'
+  Upload the SD-file containing the new ligand structures from Zenodo~\cite{zenodo_sm_2020} and rename it `Ligands (SDF)'.
 \item
   Import the simulation workflow from the European~\cite{eu_htmd_simulation_workflow} or the South African Galaxy server~\cite{za_htmd_simulation_workflow}.
 \item
@@ -1483,7 +1482,7 @@ After completing the tutorial, the user will be familiar at a basic level with a
 All authors contributed to writing Galaxy tools, creating workflows, writing training material, and writing the paper.
 
 \section*{Acknowledgements}
-We thank Bérénice Batut for helpful comments and discussions. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy and ilifu teams, for their support.
+We thank Bérénice Batut for helpful comments and discussions, Bert Droesbeke for assistance building the Docker container and Oleg Zharkov for assistance integrating the Galaxy text editor. In addition, we thank the entire Galaxy Training Network, as well as the European Galaxy and ilifu teams, for their support.
 
 The European Galaxy server, which was used for the calculations described, is in part funded by Collaborative Research Centre 992 Medical Epigenetics (DFG grant SFB 992/1 2012) and German Federal Ministry of Education and Research (BMBF grants 031 A538A/A538C RBC, 031L0101B/031L0101C de.NBI-epi (de.NBI)).
 

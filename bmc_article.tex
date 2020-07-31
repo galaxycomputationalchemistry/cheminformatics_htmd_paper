@@ -369,7 +369,7 @@ This section guides the reader through the step-by-step process required to prep
 
 \subsection*{Get data}\label{get-data}
 
-Create a new Galaxy history and then download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a the resorcinol ligand.
+Create a new Galaxy history and then download a crystal structure for the Hsp90 protein from the Protein Data Bank (PDB). The structure is provided under accession code \texttt{6HHR}~\cite{Schuetz2018} and shows Hsp90 in complex with a the resorcinol ligand (Figure \ref{fig:Hsp90}).
 
 \begin{handson_box_colour}{Data upload}
 %\textbf{Hands-on: Data upload}
@@ -623,7 +623,7 @@ situated.
 
 \end{handson_box_colour}
 
-This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose from: triclinic is selected, as it provides efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent. 
+This tool returns a new GRO structure file, containing the same coordinates as before, but defining a simulation box such that every atom is a minimum of 1 nm from the box boundary. A variety of box shapes are available to choose from: triclinic is selected, as it provides efficient packing in space and thus fewer computational resources need to be devoted to simulation of solvent.
 
 \subsection*{Solvation}\label{solvation}
 The next step is solvation of the newly created simulation box. Water was chosen as a solvent to in order to simulate biological conditions. Note
